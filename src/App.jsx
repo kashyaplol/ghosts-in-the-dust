@@ -1,15 +1,24 @@
 import { useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
+import equipment from '@/data/equipment.json';
 import Header from '@/components/ui/Header';
 import PlanetGlobe from '@/components/3d/PlanetGlobe';
+import TelemetryHUD from '@/components/ui/TelemetryHUD';
 
 export default function App() {
   const [activeBody, setActiveBody] = useState('Moon');
   const [selectedEquipmentId, setSelectedEquipmentId] = useState(null);
+  const [isInspectorOpen, setIsInspectorOpen] = useState(false);
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
 
   useEffect(() => {
     setSelectedEquipmentId(null);
+    setIsInspectorOpen(false);
+    setIsPlayingAudio(false);
   }, [activeBody]);
+
+  const selectedEquipment =
+    equipment.find((item) => item.id === selectedEquipmentId) || null;
 
   return (
     <main className="relative h-screen w-screen overflow-hidden bg-space-black">
@@ -17,6 +26,12 @@ export default function App() {
         <Header
           activeBody={activeBody}
           onToggleBody={setActiveBody}
+        />
+        <TelemetryHUD
+          selectedEquipment={selectedEquipment}
+          onClose={() => setSelectedEquipmentId(null)}
+          onOpenInspector={() => setIsInspectorOpen(true)}
+          onPlayAudio={() => setIsPlayingAudio(true)}
         />
       </div>
 
@@ -38,4 +53,3 @@ export default function App() {
     </main>
   );
 }
-
