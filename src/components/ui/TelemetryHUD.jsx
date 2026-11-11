@@ -7,10 +7,18 @@ const statusColors = {
   Preserved: '#00f3ff',
   Active: '#00f3ff',
   Operational: '#00f3ff',
+  'Mission Complete': '#00f3ff',
 };
 
 function getStatusColor(status) {
   return statusColors[status] || '#ffb703';
+}
+
+function getStatusHeading(status) {
+  if (status === 'Lost Contact') return 'Cause of Signal Loss';
+  if (status === 'Decommissioned') return 'Decommissioning Details';
+  if (status === 'Mission Complete') return 'Mission Completion';
+  return 'Current Mission Status';
 }
 
 export default function TelemetryHUD({
@@ -87,9 +95,18 @@ export default function TelemetryHUD({
             </div>
           </dl>
 
-          <div className="mt-6 rounded-lg border border-[#ff4d4d]/30 bg-[#ff4d4d]/5 p-4">
-            <h3 className="font-mono text-xs uppercase tracking-wider text-[#ff4d4d]">
-              Cause of Failure
+          <div
+            className="mt-6 rounded-lg border p-4"
+            style={{
+              borderColor: `${getStatusColor(selectedEquipment.status)}55`,
+              backgroundColor: `${getStatusColor(selectedEquipment.status)}0d`,
+            }}
+          >
+            <h3
+              className="font-mono text-xs uppercase tracking-wider"
+              style={{ color: getStatusColor(selectedEquipment.status) }}
+            >
+              {getStatusHeading(selectedEquipment.status)}
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-white/75">
               {selectedEquipment.causeOfDeath}
@@ -149,4 +166,3 @@ export default function TelemetryHUD({
     </AnimatePresence>
   );
 }
-
