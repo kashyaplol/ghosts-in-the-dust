@@ -1,8 +1,15 @@
-import { useMemo } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import equipment from '@/data/equipment.json';
 import MarkerPin from '@/components/3d/MarkerPin';
 import PlanetSurface from '@/components/3d/PlanetSurface';
 import TextureFallbackBoundary from '@/components/3d/TextureFallbackBoundary';
+import { getTextureBoundaryKey } from '@/utils/texture';
 import { latLongToVector3 } from '@/utils/coordinates';
 
 const planetColors = {
@@ -14,6 +21,7 @@ export default function PlanetGlobe({
   activeBody,
   selectedEquipmentId,
   onSelectEquipment,
+  onTextureStatus,
 }) {
   const missions = useMemo(() => (
     equipment
@@ -23,10 +31,32 @@ export default function PlanetGlobe({
         position: latLongToVector3(item.latitude, item.longitude, 2.05),
       }))
   ), [activeBody]);
+  const lastBody = useRef(activeBody);
+  const [previousBody, setPreviousBody] = useState(null);
+  const reportTextureLoaded = useCallback(
+    () => onTextureStatus?.('loaded'),
+    [onTextureStatus],
+  );
+  const reportTextureFallback = useCallback(
+    () => onTextureStatus?.('fallback'),
+    [onTextureStatus],
+  );
+
+  useEffect(() => {
+    if (lastBody.current === activeBody) return undefined;
+    const oldBody = lastBody.current;
+    lastBody.current = activeBody;
+    setPreviousBody(oldBody);
+    const timeout = window.setTimeout(() => setPreviousBody(null), 800);
+    return () => window.clearTimeout(timeout);
+  }, [activeBody]);
 
   return (
     <>
       <TextureFallbackBoundary
+        key={getTextureBoundaryKey(activeBody)}
+        resetKey={getTextureBoundaryKey(activeBody)}
+        onError={reportTextureFallback}
         fallback={(
           <mesh>
             <sphereGeometry args={[2, 64, 64]} />
@@ -38,7 +68,12 @@ export default function PlanetGlobe({
           </mesh>
         )}
       >
-        <PlanetSurface body={activeBody} color={planetColors[activeBody]} />
+        <PlanetSurface
+          activeBody={activeBody}
+          previousBody={previousBody}
+          color={planetColors[activeBody]}
+          onLoaded={reportTextureLoaded}
+        />
       </TextureFallbackBoundary>
       {missions.map((mission) => (
         <MarkerPin

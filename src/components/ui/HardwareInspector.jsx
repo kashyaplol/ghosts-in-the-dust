@@ -1,12 +1,21 @@
-import { Suspense, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Rotate3D, X } from 'lucide-react';
 import InspectorScene from '@/components/3d/inspector/InspectorScene';
-import { hasHardwareModel } from '@/components/3d/inspector/HardwareModel';
+import { hasHardwareModel } from '@/utils/models';
 
 export default function HardwareInspector({ equipment, onClose }) {
   const [wireframe, setWireframe] = useState(false);
   const [autoRotate, setAutoRotate] = useState(true);
+  const [modelState, setModelState] = useState(
+    hasHardwareModel(equipment?.id) ? 'loading' : 'no-model',
+  );
+
+  useEffect(() => {
+    setModelState(hasHardwareModel(equipment?.id) ? 'loading' : 'no-model');
+    setWireframe(false);
+    setAutoRotate(true);
+  }, [equipment?.id]);
 
   if (!equipment) return null;
 
@@ -21,7 +30,10 @@ export default function HardwareInspector({ equipment, onClose }) {
         <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
           <div>
             <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#ffb703]">
-              {hasHardwareModel(equipment.id) ? 'Loaded GLB Hardware Profile' : 'Fallback Hardware Profile'}
+              {modelState === 'loaded' && 'Loaded GLB Hardware Profile'}
+              {modelState === 'loading' && 'Loading GLB Hardware Profile'}
+              {modelState === 'failed' && 'GLB Load Failed — Fallback Profile'}
+              {modelState === 'no-model' && 'Fallback Hardware Profile'}
             </p>
             <h2 className="mt-1 text-lg text-white">{equipment.name}</h2>
           </div>
@@ -41,15 +53,19 @@ export default function HardwareInspector({ equipment, onClose }) {
                 equipment={equipment}
                 wireframe={wireframe}
                 autoRotate={autoRotate}
+                onLoading={() => setModelState('loading')}
+                onLoaded={() => setModelState('loaded')}
+                onFailed={() => setModelState('failed')}
               />
             </Suspense>
           </Canvas>
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 px-5 py-4">
           <p className="max-w-md text-xs leading-relaxed text-white/50">
-            {hasHardwareModel(equipment.id)
-              ? 'Verified local GLB asset loaded for interactive inspection.'
-              : 'No mission-specific 3D asset is bundled. This interactive low-poly fallback represents the hardware inspection surface.'}
+            {modelState === 'loaded' && 'Verified local GLB asset loaded for interactive inspection.'}
+            {modelState === 'loading' && 'Loading the selected local GLB asset; fallback geometry remains visible until ready.'}
+            {modelState === 'failed' && 'The selected GLB could not be loaded. Interactive low-poly fallback geometry is active.'}
+            {modelState === 'no-model' && 'No mission-specific 3D asset is bundled. Interactive low-poly fallback geometry is active.'}
           </p>
           <div className="flex gap-2">
             <button

@@ -20,6 +20,7 @@ export default function CanvasContainer({
   activeBody,
   selectedEquipmentId,
   onSelectEquipment,
+  onTextureStatus,
 }) {
   const controlsRef = useRef();
   const selected = equipment.find((item) => item.id === selectedEquipmentId);
@@ -42,6 +43,7 @@ export default function CanvasContainer({
           activeBody={activeBody}
           selectedEquipmentId={selectedEquipmentId}
           onSelectEquipment={onSelectEquipment}
+          onTextureStatus={onTextureStatus}
         />
         <PlanetAtmosphere color={activeBody === 'Moon' ? '#00f3ff' : '#ffb703'} />
       </Suspense>
@@ -58,4 +60,3 @@ export default function CanvasContainer({
     </Canvas>
   );
 }
-

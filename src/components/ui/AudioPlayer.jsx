@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Pause, Play, X } from 'lucide-react';
+import {
+  getTranscriptProgress,
+  isSpeechSynthesisSupported,
+} from '@/utils/audio';
 
 export default function AudioPlayer({ equipment, isPlaying, onPlay, onStop, onClose }) {
   const [supported, setSupported] = useState(true);
   const [spokenCharacters, setSpokenCharacters] = useState(0);
 
   useEffect(() => {
-    const speech = window.speechSynthesis;
-    if (!speech) {
+    const speech = typeof window !== 'undefined' ? window.speechSynthesis : null;
+    if (!isSpeechSynthesisSupported()) {
       setSupported(false);
       return undefined;
     }
@@ -18,11 +22,15 @@ export default function AudioPlayer({ equipment, isPlaying, onPlay, onStop, onCl
 
   useEffect(() => {
     if (!isPlaying || !supported || !equipment) return undefined;
-    const utterance = new SpeechSynthesisUtterance(equipment.narrativeTranscript);
+    setSpokenCharacters(0);
+    const utterance = new window.SpeechSynthesisUtterance(equipment.narrativeTranscript);
     utterance.pitch = 0.85;
     utterance.rate = 0.9;
     utterance.onboundary = (event) => setSpokenCharacters(event.charIndex);
-    utterance.onend = onStop;
+    utterance.onend = () => {
+      setSpokenCharacters(equipment.narrativeTranscript.length);
+      onStop();
+    };
     utterance.onerror = onStop;
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(utterance);
@@ -31,7 +39,7 @@ export default function AudioPlayer({ equipment, isPlaying, onPlay, onStop, onCl
 
   if (!equipment) return null;
   const transcript = equipment.narrativeTranscript;
-  const progress = Math.min(spokenCharacters / Math.max(transcript.length, 1), 1);
+  const progress = getTranscriptProgress(spokenCharacters, transcript.length);
   const hasTranscript = transcript.trim().length > 0;
 
   return (
@@ -61,7 +69,7 @@ export default function AudioPlayer({ equipment, isPlaying, onPlay, onStop, onCl
             {[3, 8, 14, 6, 18, 10, 22, 7, 15, 5].map((height, index) => (
               <span
                 key={index}
-                className={`w-1 animate-pulse rounded-sm ${isPlaying ? 'bg-[#00f3ff]' : 'bg-white/20'}`}
+                className={`w-1 rounded-sm ${isPlaying ? 'animate-pulse bg-[#00f3ff]' : 'bg-white/20'}`}
                 style={{ height: `${height}px`, animationDelay: `${index * 70}ms` }}
               />
             ))}

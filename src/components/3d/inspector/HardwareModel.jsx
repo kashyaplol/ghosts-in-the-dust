@@ -1,47 +1,63 @@
 import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import { useEffect } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
+import { Box3, Vector3 } from 'three';
+import { getModelPath } from '@/utils/models';
 
-const modelPaths = {
-  'apollo-11-lm': '/models/apollo-lunar-module.glb',
-  'opportunity-mer-b': '/models/opportunity-mer-b.glb',
-  'viking-1-lander': '/models/viking-lander.glb',
-  'ingenuity-helicopter': '/models/ingenuity-mars-helicopter.glb',
-};
-
-const modelScales = {
-  'apollo-11-lm': 0.9,
-  'opportunity-mer-b': 1.4,
-  'viking-1-lander': 0.8,
-  'ingenuity-helicopter': 1.2,
-};
-
-export function hasHardwareModel(id) {
-  return Boolean(modelPaths[id]);
-}
-
-export default function HardwareModel({ equipment, wireframe, autoRotate }) {
-  const { scene } = useGLTF(modelPaths[equipment.id]);
-
-  useEffect(() => {
-    scene.traverse((node) => {
+export default function HardwareModel({
+  equipment,
+  wireframe,
+  autoRotate,
+  onLoaded,
+}) {
+  const { scene } = useGLTF(getModelPath(equipment.id));
+  const groupRef = useRef();
+  const model = useMemo(() => {
+    const clone = scene.clone(true);
+    clone.traverse((node) => {
       if (node.isMesh && node.material) {
-        node.material.wireframe = wireframe;
+        node.material = Array.isArray(node.material)
+          ? node.material.map((material) => material.clone())
+          : node.material.clone();
       }
     });
-  }, [scene, wireframe]);
+    return clone;
+  }, [scene]);
+  const { center, scale } = useMemo(() => {
+    const bounds = new Box3().setFromObject(model);
+    const size = bounds.getSize(new Vector3());
+    const modelCenter = bounds.getCenter(new Vector3());
+    const largestDimension = Math.max(size.x, size.y, size.z, 0.001);
+    return {
+      center: modelCenter,
+      scale: 1.8 / largestDimension,
+    };
+  }, [model]);
+
+  useEffect(() => {
+    model.traverse((node) => {
+      if (node.isMesh && node.material) {
+        const materials = Array.isArray(node.material) ? node.material : [node.material];
+        materials.forEach((material) => {
+          material.wireframe = wireframe;
+        });
+      }
+    });
+  }, [model, wireframe]);
+
+  useEffect(() => {
+    onLoaded?.();
+  }, [onLoaded]);
 
   useFrame((_, delta) => {
-    if (autoRotate) scene.rotation.y += delta * 0.6;
+    if (autoRotate && groupRef.current) {
+      groupRef.current.rotation.y += delta * 0.6;
+    }
   });
 
   return (
-    <primitive
-      object={scene}
-      scale={modelScales[equipment.id] || 1}
-      rotation={[0, 0, 0]}
-    />
+    <group ref={groupRef} scale={scale} position={[-center.x * scale, -center.y * scale, -center.z * scale]}>
+      <primitive object={model} />
+    </group>
   );
 }
-
-Object.values(modelPaths).forEach((path) => useGLTF.preload(path));
