@@ -15,7 +15,7 @@ export default function CameraController({ target, controlsRef }) {
     }
 
     const direction = new Vector3(...target).normalize();
-    destination.current.copy(direction.multiplyScalar(4.2));
+    destination.current.copy(direction.multiplyScalar(5.2));
     lookTarget.current.copy(direction.multiplyScalar(2));
   }, [target]);
 
@@ -29,4 +29,3 @@ export default function CameraController({ target, controlsRef }) {
 
   return null;
 }
-

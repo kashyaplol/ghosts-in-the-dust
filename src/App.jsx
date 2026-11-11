@@ -12,12 +12,14 @@ export default function App() {
     selectedEquipmentId,
     isInspectorOpen,
     isPlayingAudio,
+    isAudioOpen,
     clearSelection,
     openInspector,
     closeInspector,
     selectEquipment,
     startAudio,
     stopAudio,
+    closeAudio,
   } = useSpaceContext();
 
   return (
@@ -42,13 +44,13 @@ export default function App() {
           onClose={closeInspector}
         />
       )}
-      {isPlayingAudio && (
+      {isAudioOpen && (
         <AudioPlayer
           equipment={selectedEquipment}
           isPlaying={isPlayingAudio}
           onPlay={startAudio}
           onStop={stopAudio}
-          onClose={stopAudio}
+          onClose={closeAudio}
         />
       )}
     </main>

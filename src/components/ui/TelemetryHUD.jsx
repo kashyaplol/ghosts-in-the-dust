@@ -21,6 +21,15 @@ function getStatusHeading(status) {
   return 'Current Mission Status';
 }
 
+function getOperationalLifespan(landedDate, lastSignalDate) {
+  const start = new Date(`${landedDate}T00:00:00Z`);
+  const end = new Date(`${lastSignalDate}T00:00:00Z`);
+  const elapsedDays = Math.max(0, Math.round((end - start) / 86400000));
+  const years = Math.floor(elapsedDays / 365.25);
+  const days = Math.round(elapsedDays - years * 365.25);
+  return years ? `${years}y ${days}d` : `${elapsedDays}d`;
+}
+
 export default function TelemetryHUD({
   selectedEquipment,
   onClose,
@@ -91,6 +100,17 @@ export default function TelemetryHUD({
               </dt>
               <dd className="mt-1 font-mono text-sm text-white">
                 {selectedEquipment.lastSignalDate}
+              </dd>
+            </div>
+            <div>
+              <dt className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+                Operational Lifespan
+              </dt>
+              <dd className="mt-1 font-mono text-sm text-white">
+                {getOperationalLifespan(
+                  selectedEquipment.landedDate,
+                  selectedEquipment.lastSignalDate,
+                )}
               </dd>
             </div>
           </dl>

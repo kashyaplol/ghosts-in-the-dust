@@ -14,6 +14,7 @@ export function SpaceProvider({ children }) {
   const [selectedEquipmentId, setSelectedEquipmentId] = useState(null);
   const [isInspectorOpen, setInspectorOpen] = useState(false);
   const [isPlayingAudio, setPlayingAudio] = useState(false);
+  const [isAudioOpen, setAudioOpen] = useState(false);
 
   const selectedEquipment = useMemo(
     () => equipment.find((item) => item.id === selectedEquipmentId) || null,
@@ -25,6 +26,7 @@ export function SpaceProvider({ children }) {
     setSelectedEquipmentId(null);
     setInspectorOpen(false);
     setPlayingAudio(false);
+    setAudioOpen(false);
   }, []);
   const selectEquipment = useCallback((id) => {
     const mission = equipment.find((item) => item.id === id);
@@ -32,13 +34,26 @@ export function SpaceProvider({ children }) {
       setSelectedEquipmentId(id);
       setInspectorOpen(false);
       setPlayingAudio(false);
+      setAudioOpen(false);
     }
   }, [activeBody]);
-  const clearSelection = useCallback(() => setSelectedEquipmentId(null), []);
+  const clearSelection = useCallback(() => {
+    setSelectedEquipmentId(null);
+    setInspectorOpen(false);
+    setPlayingAudio(false);
+    setAudioOpen(false);
+  }, []);
   const openInspector = useCallback(() => setInspectorOpen(true), []);
   const closeInspector = useCallback(() => setInspectorOpen(false), []);
-  const startAudio = useCallback(() => setPlayingAudio(true), []);
+  const startAudio = useCallback(() => {
+    setAudioOpen(true);
+    setPlayingAudio(true);
+  }, []);
   const stopAudio = useCallback(() => setPlayingAudio(false), []);
+  const closeAudio = useCallback(() => {
+    setPlayingAudio(false);
+    setAudioOpen(false);
+  }, []);
 
   const value = useMemo(() => ({
     activeBody,
@@ -46,6 +61,7 @@ export function SpaceProvider({ children }) {
     selectedEquipmentId,
     isInspectorOpen,
     isPlayingAudio,
+    isAudioOpen,
     switchBody,
     selectEquipment,
     clearSelection,
@@ -53,10 +69,12 @@ export function SpaceProvider({ children }) {
     closeInspector,
     startAudio,
     stopAudio,
+    closeAudio,
   }), [
     activeBody,
     isInspectorOpen,
     isPlayingAudio,
+    isAudioOpen,
     selectedEquipment,
     selectedEquipmentId,
     switchBody,
@@ -66,6 +84,7 @@ export function SpaceProvider({ children }) {
     closeInspector,
     startAudio,
     stopAudio,
+    closeAudio,
   ]);
 
   return <SpaceContext.Provider value={value}>{children}</SpaceContext.Provider>;

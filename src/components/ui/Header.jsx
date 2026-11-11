@@ -10,6 +10,7 @@ export default function Header() {
     item.body === activeBody
     && item.name.toLowerCase().includes(query.trim().toLowerCase())
   ));
+  const missionCount = equipment.filter((item) => item.body === activeBody).length;
 
   return (
     <header className="pointer-events-auto z-50 flex w-full flex-wrap items-center justify-between gap-4 border-b border-white/10 bg-[#08090c]/80 px-6 py-4 backdrop-blur-md">
@@ -45,7 +46,7 @@ export default function Header() {
           })}
         </div>
 
-        <div className="relative hidden md:block">
+        <div className="relative w-full sm:w-auto">
           <label htmlFor="mission-search" className="sr-only">
             Search missions
           </label>
@@ -55,7 +56,7 @@ export default function Header() {
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="SEARCH MISSIONS"
-            className="w-56 rounded border border-white/10 bg-[#12141d]/85 py-2 pl-9 pr-3 font-mono text-xs text-white outline-none transition focus:border-[#00f3ff]/60"
+            className="w-full rounded border border-white/10 bg-[#12141d]/85 py-2 pl-9 pr-3 font-mono text-xs text-white outline-none transition focus:border-[#00f3ff]/60 sm:w-56"
           />
           {query && (
             <div className="absolute left-0 right-0 top-11 z-50 rounded border border-white/10 bg-[#12141d] p-1 shadow-xl">
@@ -87,6 +88,9 @@ export default function Header() {
           />
           <span>SYSTEM ONLINE // 3D WEBGL ACTIVE</span>
         </div>
+        <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+          {missionCount} {missionCount === 1 ? 'MISSION' : 'MISSIONS'} TRACKED
+        </span>
       </div>
     </header>
   );
