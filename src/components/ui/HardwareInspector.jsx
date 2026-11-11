@@ -2,6 +2,7 @@ import { Suspense, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Rotate3D, X } from 'lucide-react';
 import InspectorScene from '@/components/3d/inspector/InspectorScene';
+import { hasHardwareModel } from '@/components/3d/inspector/HardwareModel';
 
 export default function HardwareInspector({ equipment, onClose }) {
   const [wireframe, setWireframe] = useState(false);
@@ -20,7 +21,7 @@ export default function HardwareInspector({ equipment, onClose }) {
         <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
           <div>
             <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#ffb703]">
-              Fallback Hardware Profile
+              {hasHardwareModel(equipment.id) ? 'Loaded GLB Hardware Profile' : 'Fallback Hardware Profile'}
             </p>
             <h2 className="mt-1 text-lg text-white">{equipment.name}</h2>
           </div>
@@ -36,14 +37,19 @@ export default function HardwareInspector({ equipment, onClose }) {
         <div className="h-[min(60vh,480px)]">
           <Canvas camera={{ position: [0, 0.5, 3.5], fov: 40 }}>
             <Suspense fallback={null}>
-              <InspectorScene wireframe={wireframe} autoRotate={autoRotate} />
+              <InspectorScene
+                equipment={equipment}
+                wireframe={wireframe}
+                autoRotate={autoRotate}
+              />
             </Suspense>
           </Canvas>
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 px-5 py-4">
           <p className="max-w-md text-xs leading-relaxed text-white/50">
-            No mission-specific 3D asset is bundled. This interactive low-poly
-            fallback represents the hardware inspection surface.
+            {hasHardwareModel(equipment.id)
+              ? 'Verified local GLB asset loaded for interactive inspection.'
+              : 'No mission-specific 3D asset is bundled. This interactive low-poly fallback represents the hardware inspection surface.'}
           </p>
           <div className="flex gap-2">
             <button
@@ -66,4 +72,3 @@ export default function HardwareInspector({ equipment, onClose }) {
     </div>
   );
 }
-

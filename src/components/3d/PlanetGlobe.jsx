@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
 import equipment from '@/data/equipment.json';
 import MarkerPin from '@/components/3d/MarkerPin';
+import PlanetSurface from '@/components/3d/PlanetSurface';
+import TextureFallbackBoundary from '@/components/3d/TextureFallbackBoundary';
 import { latLongToVector3 } from '@/utils/coordinates';
 
 const planetColors = {
@@ -24,14 +26,20 @@ export default function PlanetGlobe({
 
   return (
     <>
-      <mesh>
-        <sphereGeometry args={[2, 64, 64]} />
-        <meshStandardMaterial
-          color={planetColors[activeBody]}
-          roughness={0.9}
-          metalness={0.05}
-        />
-      </mesh>
+      <TextureFallbackBoundary
+        fallback={(
+          <mesh>
+            <sphereGeometry args={[2, 64, 64]} />
+            <meshStandardMaterial
+              color={planetColors[activeBody]}
+              roughness={0.9}
+              metalness={0.05}
+            />
+          </mesh>
+        )}
+      >
+        <PlanetSurface body={activeBody} color={planetColors[activeBody]} />
+      </TextureFallbackBoundary>
       {missions.map((mission) => (
         <MarkerPin
           key={mission.id}
@@ -43,4 +51,3 @@ export default function PlanetGlobe({
     </>
   );
 }
-

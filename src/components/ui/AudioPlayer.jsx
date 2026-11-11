@@ -32,6 +32,7 @@ export default function AudioPlayer({ equipment, isPlaying, onPlay, onStop, onCl
   if (!equipment) return null;
   const transcript = equipment.narrativeTranscript;
   const progress = Math.min(spokenCharacters / Math.max(transcript.length, 1), 1);
+  const hasTranscript = transcript.trim().length > 0;
 
   return (
     <div className="pointer-events-auto fixed bottom-6 left-1/2 z-50 w-[min(92vw,640px)] -translate-x-1/2 rounded-xl border border-[#00f3ff]/30 bg-[#12141d]/95 p-5 shadow-2xl backdrop-blur-md">
@@ -48,6 +49,8 @@ export default function AudioPlayer({ equipment, isPlaying, onPlay, onStop, onCl
       </div>
       {!supported ? (
         <p className="mt-5 text-sm text-[#ff4d4d]">Speech synthesis is unavailable in this browser.</p>
+      ) : !hasTranscript ? (
+        <p className="mt-5 text-sm text-white/60">No transmission transcript is available for this mission.</p>
       ) : (
         <>
           <p className="mt-5 text-sm leading-relaxed text-white/80">
