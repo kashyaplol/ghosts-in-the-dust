@@ -5,6 +5,12 @@ import { latLongToVector3 } from '../src/utils/coordinates.js';
 import { getTranscriptProgress } from '../src/utils/audio.js';
 import { getModelPath, hasHardwareModel } from '../src/utils/models.js';
 import { getTextureBoundaryKey, getTexturePath } from '../src/utils/texture.js';
+import {
+  APOLLO_11_NORMAL,
+  SUN_DIRECTION,
+  dotProduct,
+} from '../src/utils/planetLighting.js';
+import { getHardwareImage, hasHardwareImage } from '../src/utils/hardwareImages.js';
 
 test('converts Apollo 11 coordinates using the documented convention', () => {
   const actual = latLongToVector3(0.67408, 23.47297, 2.05);
@@ -20,6 +26,11 @@ test('converts Apollo 11 coordinates using the documented convention', () => {
     assert.ok(Math.abs(value - expected[index]) < 1e-12);
   });
   assert.ok(Math.abs(Math.hypot(...actual) - 2.05) < 1e-12);
+});
+
+test('aims sunlight at the Apollo 11 lunar landing site', () => {
+  assert.ok(Math.abs(Math.hypot(...APOLLO_11_NORMAL) - 1) < 1e-12);
+  assert.ok(dotProduct(APOLLO_11_NORMAL, SUN_DIRECTION) > 0);
 });
 
 test('loads six unique complete equipment records', async () => {
@@ -62,6 +73,18 @@ test('maps available hardware models and preserves fallbacks', async () => {
   assert.equal(hasHardwareModel('curiosity-msl'), false);
   assert.ok(equipment.some((item) => item.id === 'apollo-15-lrv'));
   assert.ok(equipment.some((item) => item.id === 'curiosity-msl'));
+});
+
+test('maps verified static hardware images and preserves honest fallback', async () => {
+  for (const id of ['apollo-15-lrv', 'curiosity-msl']) {
+    const image = getHardwareImage(id);
+    assert.ok(image);
+    assert.equal(image.kind, 'NASA ARCHIVAL IMAGE');
+    await stat(new URL(`../public${image.path}`, import.meta.url));
+    assert.equal(hasHardwareImage(id), true);
+  }
+  assert.equal(hasHardwareImage('unknown-mission'), false);
+  assert.equal(getHardwareImage('unknown-mission'), null);
 });
 
 test('isolates texture paths and resets boundary keys by body', () => {

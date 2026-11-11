@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { AdditiveBlending, DoubleSide } from 'three';
+import { AdditiveBlending, Color, DoubleSide } from 'three';
 
 const starVertex = `
   attribute float size;
@@ -14,11 +14,12 @@ const starVertex = `
 `;
 
 const starFragment = `
+  uniform float opacity;
   varying vec3 vColor;
   void main() {
     float distanceToCenter = distance(gl_PointCoord, vec2(0.5));
     float softness = smoothstep(0.5, 0.05, distanceToCenter);
-    gl_FragColor = vec4(vColor, softness);
+    gl_FragColor = vec4(vColor, softness * opacity);
   }
 `;
 
@@ -43,7 +44,7 @@ function createStars(count, radius, seed) {
     colors[offset] = 0.72 + temperature * 0.28;
     colors[offset + 1] = 0.78 + (1 - temperature) * 0.2;
     colors[offset + 2] = 0.92 + temperature * 0.08;
-    sizes[index] = 0.018 + random() * 0.045;
+    sizes[index] = 0.08 + random() * 0.16;
   }
   return { positions, colors, sizes };
 }
@@ -72,10 +73,30 @@ function NebulaCloud({ position, scale, color, opacity }) {
   return (
     <mesh position={position} scale={scale} rotation={[0.1, 0.2, -0.3]} raycast={() => null}>
       <planeGeometry args={[2, 2]} />
-      <meshBasicMaterial
-        color={color}
+      <shaderMaterial
+        vertexShader={`
+          varying vec2 vUv;
+          void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `}
+        fragmentShader={`
+          uniform vec3 cloudColor;
+          uniform float cloudOpacity;
+          varying vec2 vUv;
+          void main() {
+            vec2 centered = vUv - 0.5;
+            float edge = 1.0 - smoothstep(0.12, 0.5, length(centered));
+            float streak = 0.72 + 0.28 * sin(vUv.x * 18.0 + vUv.y * 7.0);
+            gl_FragColor = vec4(cloudColor, edge * streak * cloudOpacity);
+          }
+        `}
+        uniforms={{
+          cloudColor: { value: new Color(color) },
+          cloudOpacity: { value: opacity },
+        }}
         transparent
-        opacity={opacity}
         blending={AdditiveBlending}
         depthWrite={false}
         side={DoubleSide}
@@ -87,11 +108,12 @@ function NebulaCloud({ position, scale, color, opacity }) {
 export default function DeepSpaceBackground() {
   return (
     <group>
-      <StarLayer count={420} radius={22} seed={17} opacity={0.75} />
-      <StarLayer count={180} radius={15} seed={91} opacity={0.45} />
-      <NebulaCloud position={[-8, 3, -14]} scale={[9, 3.5, 1]} color="#25204d" opacity={0.045} />
-      <NebulaCloud position={[8, -4, -18]} scale={[8, 2.8, 1]} color="#3a2544" opacity={0.035} />
-      <NebulaCloud position={[0, 7, -22]} scale={[12, 2, 1]} color="#182c50" opacity={0.025} />
+      <StarLayer count={620} radius={30} seed={17} opacity={0.85} />
+      <StarLayer count={240} radius={22} seed={91} opacity={0.65} />
+      <StarLayer count={70} radius={12} seed={173} opacity={0.9} />
+      <NebulaCloud position={[-8, 3, -14]} scale={[9, 3.5, 1]} color="#25204d" opacity={0.22} />
+      <NebulaCloud position={[8, -4, -18]} scale={[8, 2.8, 1]} color="#3a2544" opacity={0.16} />
+      <NebulaCloud position={[0, 7, -22]} scale={[12, 2, 1]} color="#182c50" opacity={0.12} />
     </group>
   );
 }

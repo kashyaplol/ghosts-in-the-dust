@@ -1,5 +1,6 @@
 import { useThree } from '@react-three/fiber';
 import { useEffect } from 'react';
+import { SUN_DIRECTION } from '@/utils/planetLighting';
 
 export default function PlanetLighting() {
   const { gl } = useThree();
@@ -12,7 +13,7 @@ export default function PlanetLighting() {
     <>
       <ambientLight intensity={0.16} color="#8793ad" />
       <directionalLight
-        position={[-4, 3, 5]}
+        position={SUN_DIRECTION.map((value) => value * -6)}
         intensity={3.2}
         color="#fff4df"
       />

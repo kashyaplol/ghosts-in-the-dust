@@ -35,7 +35,7 @@ export default function CanvasContainer({
     <Canvas
       className="pointer-events-auto"
       style={{ touchAction: 'none' }}
-      camera={{ position: [0, 0, 5], fov: 45 }}
+      camera={{ position: [0, 0, 5], fov: 45, near: 0.1, far: 100 }}
       dpr={[1, 1.75]}
       gl={{ antialias: true, logarithmicDepthBuffer: true }}
     >
