@@ -43,36 +43,36 @@ test('loads six unique complete equipment records', async () => {
     ]);
     assert.ok(item.narrativeTranscript);
   });
+});
 
-  test('maps available hardware models and preserves fallbacks', async () => {
-    const contents = await readFile(new URL('../src/data/equipment.json', import.meta.url));
-    const equipment = JSON.parse(contents);
-    const available = ['apollo-11-lm', 'opportunity-mer-b', 'viking-1-lander', 'ingenuity-helicopter'];
+test('maps available hardware models and preserves fallbacks', async () => {
+  const contents = await readFile(new URL('../src/data/equipment.json', import.meta.url));
+  const equipment = JSON.parse(contents);
+  const available = ['apollo-11-lm', 'opportunity-mer-b', 'viking-1-lander', 'ingenuity-helicopter'];
 
-    for (const id of available) {
-      const path = getModelPath(id);
-      assert.ok(path);
-      assert.equal(path.startsWith('/models/'), true);
-      assert.equal(hasHardwareModel(id), true);
-      const asset = new URL(`../public${path}`, import.meta.url);
-      await stat(asset);
-    }
-    assert.equal(hasHardwareModel('apollo-15-lrv'), false);
-    assert.equal(hasHardwareModel('curiosity-msl'), false);
-    assert.ok(equipment.some((item) => item.id === 'apollo-15-lrv'));
-    assert.ok(equipment.some((item) => item.id === 'curiosity-msl'));
-  });
+  for (const id of available) {
+    const path = getModelPath(id);
+    assert.ok(path);
+    assert.equal(path.startsWith('/models/'), true);
+    assert.equal(hasHardwareModel(id), true);
+    const asset = new URL(`../public${path}`, import.meta.url);
+    await stat(asset);
+  }
+  assert.equal(hasHardwareModel('apollo-15-lrv'), false);
+  assert.equal(hasHardwareModel('curiosity-msl'), false);
+  assert.ok(equipment.some((item) => item.id === 'apollo-15-lrv'));
+  assert.ok(equipment.some((item) => item.id === 'curiosity-msl'));
+});
 
-  test('isolates texture paths and resets boundary keys by body', () => {
-    assert.equal(getTexturePath('Moon'), '/textures/moon_surface.jpg');
-    assert.equal(getTexturePath('Mars'), '/textures/mars_surface.jpg');
-    assert.notEqual(getTextureBoundaryKey('Moon'), getTextureBoundaryKey('Mars'));
-  });
+test('isolates texture paths and resets boundary keys by body', () => {
+  assert.equal(getTexturePath('Moon'), '/textures/moon_surface.jpg');
+  assert.equal(getTexturePath('Mars'), '/textures/mars_surface.jpg');
+  assert.notEqual(getTextureBoundaryKey('Moon'), getTextureBoundaryKey('Mars'));
+});
 
-  test('clamps transcript progress and reaches completion', () => {
-    assert.equal(getTranscriptProgress(0, 100), 0);
-    assert.equal(getTranscriptProgress(50, 100), 0.5);
-    assert.equal(getTranscriptProgress(100, 100), 1);
-    assert.equal(getTranscriptProgress(200, 100), 1);
-  });
+test('clamps transcript progress and reaches completion', () => {
+  assert.equal(getTranscriptProgress(0, 100), 0);
+  assert.equal(getTranscriptProgress(50, 100), 0.5);
+  assert.equal(getTranscriptProgress(100, 100), 1);
+  assert.equal(getTranscriptProgress(200, 100), 1);
 });

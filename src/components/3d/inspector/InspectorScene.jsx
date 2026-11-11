@@ -1,8 +1,7 @@
 import { Suspense, useEffect } from 'react';
 import { OrbitControls } from '@react-three/drei';
 import HardwareFallback from '@/components/3d/inspector/HardwareFallback';
-import HardwareModel, {
-} from '@/components/3d/inspector/HardwareModel';
+import HardwareModel from '@/components/3d/inspector/HardwareModel';
 import TextureFallbackBoundary from '@/components/3d/TextureFallbackBoundary';
 import { hasHardwareModel } from '@/utils/models';
 

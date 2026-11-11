@@ -2,7 +2,11 @@ import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useRef } from 'react';
 import { Box3, Vector3 } from 'three';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { getModelPath } from '@/utils/models';
+
+const dracoLoader = new DRACOLoader();
+dracoLoader.setDecoderPath('/draco/');
 
 export default function HardwareModel({
   equipment,
@@ -10,7 +14,12 @@ export default function HardwareModel({
   autoRotate,
   onLoaded,
 }) {
-  const { scene } = useGLTF(getModelPath(equipment.id));
+  const { scene } = useGLTF(
+    getModelPath(equipment.id),
+    true,
+    false,
+    (loader) => loader.setDRACOLoader(dracoLoader),
+  );
   const groupRef = useRef();
   const model = useMemo(() => {
     const clone = scene.clone(true);
