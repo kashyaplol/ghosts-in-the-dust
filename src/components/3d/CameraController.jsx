@@ -4,26 +4,58 @@ import { Vector3 } from 'three';
 
 export default function CameraController({ target, controlsRef }) {
   const { camera } = useThree();
-  const destination = useRef(new Vector3(0, 0, 5));
-  const lookTarget = useRef(new Vector3());
+  const animationRef = useRef(null);
 
   useEffect(() => {
-    if (!target) {
-      destination.current.set(0, 0, 5);
-      lookTarget.current.set(0, 0, 0);
-      return;
+    const controls = controlsRef.current;
+    const animation = {
+      elapsed: 0,
+      start: camera.position.clone(),
+      destination: target
+        ? new Vector3(...target).normalize().multiplyScalar(5.2)
+        : new Vector3(0, 0, 5),
+    };
+
+    animationRef.current = animation;
+    if (controls) {
+      controls.enabled = false;
+      controls.target.set(0, 0, 0);
+      controls.update();
     }
 
-    const direction = new Vector3(...target).normalize();
-    destination.current.copy(direction.multiplyScalar(5.2));
-    lookTarget.current.copy(direction.multiplyScalar(2));
-  }, [target]);
+    return () => {
+      if (animationRef.current !== animation) return;
+      animationRef.current = null;
+      if (controls) {
+        controls.enabled = true;
+        controls.target.set(0, 0, 0);
+        controls.update();
+      }
+    };
+  }, [target, camera, controlsRef]);
 
-  useFrame(() => {
-    camera.position.lerp(destination.current, 0.06);
-    if (controlsRef.current) {
-      controlsRef.current.target.lerp(lookTarget.current, 0.06);
-      controlsRef.current.update();
+  useFrame((_, delta) => {
+    const animation = animationRef.current;
+    if (!animation) return;
+
+    animation.elapsed = Math.min(animation.elapsed + delta / 0.7, 1);
+    const eased = animation.elapsed * animation.elapsed
+      * (3 - 2 * animation.elapsed);
+    camera.position.lerpVectors(animation.start, animation.destination, eased);
+
+    const controls = controlsRef.current;
+    if (controls) {
+      controls.target.set(0, 0, 0);
+      controls.update();
+    }
+
+    if (animation.elapsed >= 1) {
+      animationRef.current = null;
+      if (controls) {
+        controls.enabled = true;
+        controls.target.set(0, 0, 0);
+        controls.update();
+      }
     }
   });
 

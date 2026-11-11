@@ -1,9 +1,12 @@
 import { Suspense, useMemo, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
+import { MOUSE } from 'three';
 import equipment from '@/data/equipment.json';
 import PlanetGlobe from '@/components/3d/PlanetGlobe';
 import PlanetAtmosphere from '@/components/3d/PlanetAtmosphere';
+import DeepSpaceBackground from '@/components/3d/DeepSpaceBackground';
+import PlanetLighting from '@/components/3d/PlanetLighting';
 import CameraController from '@/components/3d/CameraController';
 import { latLongToVector3 } from '@/utils/coordinates';
 
@@ -31,13 +34,14 @@ export default function CanvasContainer({
   return (
     <Canvas
       className="pointer-events-auto"
+      style={{ touchAction: 'none' }}
       camera={{ position: [0, 0, 5], fov: 45 }}
       dpr={[1, 1.75]}
+      gl={{ antialias: true, logarithmicDepthBuffer: true }}
     >
       <color attach="background" args={['#08090c']} />
-      <ambientLight intensity={1.1} />
-      <directionalLight position={[4, 4, 5]} intensity={3} />
-      <pointLight position={[-4, -2, 3]} intensity={1.5} color="#00f3ff" />
+      <DeepSpaceBackground />
+      <PlanetLighting />
       <Suspense fallback={<LoadingGlobe />}>
         <PlanetGlobe
           activeBody={activeBody}
@@ -45,17 +49,26 @@ export default function CanvasContainer({
           onSelectEquipment={onSelectEquipment}
           onTextureStatus={onTextureStatus}
         />
-        <PlanetAtmosphere color={activeBody === 'Moon' ? '#00f3ff' : '#ffb703'} />
+        <PlanetAtmosphere body={activeBody} />
       </Suspense>
       <CameraController target={target} controlsRef={controlsRef} />
       <OrbitControls
         ref={controlsRef}
+        enableRotate
+        enableZoom
         enablePan={false}
         enableDamping
+        rotateSpeed={0.7}
+        zoomSpeed={0.8}
         minDistance={3}
         maxDistance={8}
         autoRotate={!selectedEquipmentId}
         autoRotateSpeed={0.5}
+        mouseButtons={{
+          LEFT: MOUSE.ROTATE,
+          MIDDLE: MOUSE.DOLLY,
+          RIGHT: MOUSE.PAN,
+        }}
       />
     </Canvas>
   );

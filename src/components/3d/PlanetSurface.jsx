@@ -41,6 +41,7 @@ function TexturedSurface({
             opacity={1}
             depthWrite={false}
             roughness={0.9}
+            metalness={0}
           />
         </mesh>
       )}
@@ -54,6 +55,7 @@ function TexturedSurface({
           opacity={previousBody ? 0 : 1}
           depthWrite={false}
           roughness={0.9}
+          metalness={0}
         />
       </mesh>
     </>

@@ -19,6 +19,7 @@ export default function MarkerPin({ mission, selected, onSelect }) {
       position={position}
       onClick={(event) => {
         event.stopPropagation();
+        if (event.delta > 4) return;
         onSelect(mission.id);
       }}
       onPointerOver={(event) => {
@@ -41,4 +42,3 @@ export default function MarkerPin({ mission, selected, onSelect }) {
     </mesh>
   );
 }
-
