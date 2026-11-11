@@ -1,0 +1,110 @@
+[
+  {
+    "id": "apollo-11-lm",
+    "name": "Apollo 11 Lunar Module",
+    "body": "Moon",
+    "latitude": 0.67408,
+    "longitude": 23.47297,
+    "landedDate": "1969-07-20",
+    "lastSignalDate": "1969-07-21",
+    "status": "Decommissioned",
+    "causeOfDeath": "The ascent stage was intentionally jettisoned after the crew departed the lunar surface, leaving the descent stage at Tranquility Base.",
+    "primaryMission": "Land the first humans on the Moon, conduct surface observations and experiments, and return lunar samples to Earth.",
+    "technicalSpecs": {
+      "mass": "10,821 kg dry descent stage",
+      "powerSource": "Silver-zinc batteries",
+      "totalDistance": "1.25 km on the lunar surface"
+    },
+    "narrativeTranscript": "Tranquility Base here. The surface work is complete, and my crew is climbing toward orbit. I will remain beneath the lunar dust, holding the first footprints in place."
+  },
+  {
+    "id": "apollo-15-lrv",
+    "name": "Apollo 15 Lunar Roving Vehicle",
+    "body": "Moon",
+    "latitude": 26.1322,
+    "longitude": 3.6339,
+    "landedDate": "1971-07-30",
+    "lastSignalDate": "1971-08-02",
+    "status": "Decommissioned",
+    "causeOfDeath": "The battery-powered rover was parked at the end of the mission and left without a means of recharging or remote operation.",
+    "primaryMission": "Extend the crew's exploration range around Hadley-Apennine, document lunar geology, and transport samples and scientific instruments.",
+    "technicalSpecs": {
+      "mass": "210 kg",
+      "powerSource": "Two 36-volt silver-zinc batteries",
+      "totalDistance": "27.76 km"
+    },
+    "narrativeTranscript": "My wheels have carried the crew beyond the lander and back through the dust. The batteries are quiet now. I am parked beneath the mountains, facing the trail we made together."
+  },
+  {
+    "id": "opportunity-mer-b",
+    "name": "Opportunity Rover",
+    "body": "Mars",
+    "latitude": -1.9482,
+    "longitude": 354.4742,
+    "landedDate": "2004-01-25",
+    "lastSignalDate": "2018-06-10",
+    "status": "Lost Contact",
+    "causeOfDeath": "A planet-wide Martian dust storm blocked sunlight from reaching the solar arrays, causing critical battery depletion and ending communications.",
+    "primaryMission": "Search for and characterize rocks and soils that preserve evidence of past water activity on Mars.",
+    "technicalSpecs": {
+      "mass": "185 kg",
+      "powerSource": "Solar array and lithium-ion batteries",
+      "totalDistance": "45.16 km"
+    },
+    "narrativeTranscript": "My battery is low and it is getting dark. Dust has covered the solar panels. I am entering a final sleep cycle at Endeavour Crater, carrying the memory of ancient water with me."
+  },
+  {
+    "id": "curiosity-msl",
+    "name": "Curiosity Rover",
+    "body": "Mars",
+    "latitude": -4.5895,
+    "longitude": 137.4417,
+    "landedDate": "2012-08-06",
+    "lastSignalDate": "2026-11-11",
+    "status": "Operational",
+    "causeOfDeath": "No confirmed cause of death; the rover remains active while its instruments and mobility systems continue to be monitored.",
+    "primaryMission": "Determine whether Gale Crater ever offered environmental conditions capable of supporting microbial life.",
+    "technicalSpecs": {
+      "mass": "899 kg",
+      "powerSource": "Multi-Mission Radioisotope Thermoelectric Generator",
+      "totalDistance": "35.78 km"
+    },
+    "narrativeTranscript": "The wind moves across Mount Sharp, and my instruments are still listening. Each drilled sample adds another page to the story of a world that once held water."
+  },
+  {
+    "id": "viking-1-lander",
+    "name": "Viking 1 Lander",
+    "body": "Mars",
+    "latitude": 22.697,
+    "longitude": 48.222,
+    "landedDate": "1976-07-20",
+    "lastSignalDate": "1982-11-11",
+    "status": "Lost Contact",
+    "causeOfDeath": "A software update caused the lander's antenna to point incorrectly, and the resulting loss of communication ended the mission.",
+    "primaryMission": "Perform the first successful soft landing on Mars, image the surface, monitor weather, and search for signs of biological activity.",
+    "technicalSpecs": {
+      "mass": "572 kg",
+      "powerSource": "Radioisotope Thermoelectric Generators",
+      "totalDistance": "0 km"
+    },
+    "narrativeTranscript": "I have watched two Martian seasons pass from my still position on Chryse Planitia. My antenna has turned away from Earth, but the soil readings and weather records remain in the archive."
+  },
+  {
+    "id": "ingenuity-helicopter",
+    "name": "Ingenuity Helicopter",
+    "body": "Mars",
+    "latitude": -18.4447,
+    "longitude": 77.4508,
+    "landedDate": "2021-02-18",
+    "lastSignalDate": "2024-01-18",
+    "status": "Mission Complete",
+    "causeOfDeath": "A hard landing damaged the rotor blades after a flight in which the helicopter lost visual contact with the surface, ending its flight operations.",
+    "primaryMission": "Demonstrate powered, controlled flight on another planet and scout terrain ahead of the Perseverance rover.",
+    "technicalSpecs": {
+      "mass": "1.8 kg",
+      "powerSource": "Solar panel and rechargeable lithium-ion batteries",
+      "totalDistance": "17.23 km"
+    },
+    "narrativeTranscript": "Flight seventy-two is complete. I rose above the Jezero floor more times than anyone expected, drawing a path through the thin air. My blades are still, but the sky is no longer untested."
+  }
+]
