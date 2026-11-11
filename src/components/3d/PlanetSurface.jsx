@@ -6,7 +6,6 @@ import { getTexturePath } from '@/utils/texture';
 function TexturedSurface({
   activeBody,
   previousBody,
-  color,
   onLoaded,
 }) {
   const activeMaterial = useRef();
@@ -37,9 +36,10 @@ function TexturedSurface({
           <meshStandardMaterial
             ref={previousMaterial}
             map={textures[0]}
-            color={color}
+            color="#ffffff"
             transparent
             opacity={1}
+            depthWrite={false}
             roughness={0.9}
           />
         </mesh>
@@ -49,9 +49,10 @@ function TexturedSurface({
         <meshStandardMaterial
           ref={activeMaterial}
           map={activeTexture}
-          color={color}
+          color="#ffffff"
           transparent
           opacity={previousBody ? 0 : 1}
+          depthWrite={false}
           roughness={0.9}
         />
       </mesh>
@@ -62,14 +63,12 @@ function TexturedSurface({
 export default function PlanetSurface({
   activeBody,
   previousBody,
-  color,
   onLoaded,
 }) {
   return (
     <TexturedSurface
       activeBody={activeBody}
       previousBody={previousBody}
-      color={color}
       onLoaded={onLoaded}
     />
   );

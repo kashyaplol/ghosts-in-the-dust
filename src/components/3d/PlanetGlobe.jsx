@@ -71,7 +71,6 @@ export default function PlanetGlobe({
         <PlanetSurface
           activeBody={activeBody}
           previousBody={previousBody}
-          color={planetColors[activeBody]}
           onLoaded={reportTextureLoaded}
         />
       </TextureFallbackBoundary>
