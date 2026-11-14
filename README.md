@@ -1,5 +1,6 @@
 <div align="center">
   <img src="readme-banner.png" alt="The Moon, Mars, and a lander on a lunar surface" width="100%" />
+<img width="2172" height="724" alt="readme-banner" src="https://github.com/user-attachments/assets/06bb0f9c-af3f-45bb-8b6d-07a452f325be" />
 
   <h1>Ghosts in the Dust</h1>
   <p><strong>A planetary archaeology archive of humanity's missions on the Moon and Mars.</strong></p>
