@@ -24,7 +24,7 @@ export default function Header({
         <p className="font-mono text-xs uppercase tracking-[0.3em] text-white/50">NASA // DEEP SPACE ARCHIVE</p>
         <h1 className="mt-1 text-xl font-semibold tracking-widest text-[#00f3ff]">Ghosts in the Dust</h1>
       </div>
-      <div className="flex items-center gap-6">
+      <div className="flex w-full flex-wrap items-center justify-end gap-3 sm:w-auto sm:gap-6">
         <div data-tutorial="planet-selector" className="flex items-center rounded-full border border-white/10 bg-[#12141d]/85 p-1 font-mono text-xs uppercase tracking-wider">
           {['Moon', 'Mars'].map((body) => (
             <button
