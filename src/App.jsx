@@ -11,6 +11,7 @@ import LoadingScreen from '@/components/ui/LoadingScreen';
 import PlanetLoadingOverlay from '@/components/ui/PlanetLoadingOverlay';
 import GuidedExploration from '@/components/ui/GuidedExploration';
 import MissionTimeline from '@/components/ui/MissionTimeline';
+import MissionComparison from '@/components/ui/MissionComparison';
 import useOnboarding from '@/hooks/useOnboarding';
 import useMissionSearch from '@/hooks/useMissionSearch';
 import useKeyboardShortcuts from '@/hooks/useKeyboardShortcuts';
@@ -43,6 +44,7 @@ export default function App() {
   const [shortcutGuideOpen, setShortcutGuideOpen] = useState(false);
   const [guidedOpen, setGuidedOpen] = useState(false);
   const [timelineOpen, setTimelineOpen] = useState(false);
+  const [comparisonOpen, setComparisonOpen] = useState(false);
   const { isOpen: isTutorialOpen, finish, replay } = useOnboarding();
   const requestCameraAction = useCallback((type) => {
     setCameraAction({ type, nonce: Date.now() });
@@ -124,6 +126,7 @@ export default function App() {
           onSelectMission={selectMission}
           onStartGuidedExploration={() => setGuidedOpen(true)}
           onToggleTimeline={() => setTimelineOpen((open) => !open)}
+          onToggleComparison={() => setComparisonOpen(true)}
         />
       </div>
       <div className="pointer-events-none fixed inset-0 z-10 flex flex-col">
@@ -158,6 +161,11 @@ export default function App() {
           setTimelineOpen(false);
         }}
         onClose={() => setTimelineOpen(false)}
+      />
+      <MissionComparison
+        open={comparisonOpen}
+        onClose={() => setComparisonOpen(false)}
+        onSelectMission={selectMission}
       />
       <GuidedExploration
         open={guidedOpen}

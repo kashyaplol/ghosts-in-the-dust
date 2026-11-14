@@ -1,4 +1,4 @@
-import { Clock3, Compass, HelpCircle, Keyboard } from 'lucide-react';
+import { ArrowLeftRight, Clock3, Compass, HelpCircle, Keyboard } from 'lucide-react';
 import equipment from '@/data/equipment.json';
 import { useSpaceContext } from '@/context/SpaceContext';
 import MissionSearch from '@/components/ui/MissionSearch';
@@ -13,6 +13,7 @@ export default function Header({
   onSelectMission,
   onStartGuidedExploration,
   onToggleTimeline,
+  onToggleComparison,
 }) {
   const { activeBody, switchBody } = useSpaceContext();
   const missionCount = equipment.filter((item) => item.body === activeBody).length;
@@ -37,6 +38,14 @@ export default function Header({
             </button>
           ))}
         </div>
+        <button
+          type="button"
+          onClick={onToggleComparison}
+          aria-label="Compare missions"
+          className="flex items-center gap-1 rounded border border-white/10 px-2 py-2 font-mono text-[10px] text-white/60 transition-colors hover:border-[#00f3ff]/50 hover:text-[#00f3ff] focus:outline-none focus:ring-2 focus:ring-[#00f3ff]/70"
+        >
+          <ArrowLeftRight size={14} /> <span className="hidden xl:inline">COMPARE</span>
+        </button>
         <MissionSearch
           search={search}
           open={searchOpen}
