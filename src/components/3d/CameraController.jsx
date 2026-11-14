@@ -2,7 +2,19 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
 import { Vector3 } from 'three';
 
-export default function CameraController({ target, controlsRef }) {
+const DEFAULT_POSITION = new Vector3(0, 0, 5);
+const EXPLORE_POSITION = new Vector3(0, 0, 5.8);
+
+function getDestination(target, action) {
+  if (action?.type === 'explore') return EXPLORE_POSITION;
+  if (action?.type === 'focus' && target) {
+    return new Vector3(...target).normalize().multiplyScalar(5.2);
+  }
+  if (action?.type === 'reset' || !target) return DEFAULT_POSITION;
+  return new Vector3(...target).normalize().multiplyScalar(5.2);
+}
+
+export default function CameraController({ target, controlsRef, action }) {
   const { camera } = useThree();
   const animationRef = useRef(null);
 
@@ -11,9 +23,7 @@ export default function CameraController({ target, controlsRef }) {
     const animation = {
       elapsed: 0,
       start: camera.position.clone(),
-      destination: target
-        ? new Vector3(...target).normalize().multiplyScalar(5.2)
-        : new Vector3(0, 0, 5),
+      destination: getDestination(target, action),
     };
 
     animationRef.current = animation;
@@ -32,7 +42,7 @@ export default function CameraController({ target, controlsRef }) {
         controls.update();
       }
     };
-  }, [target, camera, controlsRef]);
+  }, [target, action, camera, controlsRef]);
 
   useFrame((_, delta) => {
     const animation = animationRef.current;

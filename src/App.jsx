@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import CanvasContainer from '@/components/3d/CanvasContainer';
 import AudioPlayer from '@/components/ui/AudioPlayer';
 import Header from '@/components/ui/Header';
 import HardwareInspector from '@/components/ui/HardwareInspector';
 import TelemetryHUD from '@/components/ui/TelemetryHUD';
 import TutorialOverlay from '@/components/ui/TutorialOverlay';
+import CameraActions from '@/components/ui/CameraActions';
 import useOnboarding from '@/hooks/useOnboarding';
 import { useSpaceContext } from '@/context/SpaceContext';
 
@@ -25,7 +26,11 @@ export default function App() {
     closeAudio,
   } = useSpaceContext();
   const [textureStatus, setTextureStatus] = useState('loading');
+  const [cameraAction, setCameraAction] = useState(null);
   const { isOpen: isTutorialOpen, finish, replay } = useOnboarding();
+  const requestCameraAction = useCallback((type) => {
+    setCameraAction({ type, nonce: Date.now() });
+  }, []);
 
   useEffect(() => {
     setTextureStatus('loading');
@@ -38,6 +43,11 @@ export default function App() {
         selectedEquipmentId={selectedEquipmentId}
         onSelectEquipment={selectEquipment}
         onTextureStatus={setTextureStatus}
+        cameraAction={cameraAction}
+      />
+      <CameraActions
+        hasSelection={Boolean(selectedEquipmentId)}
+        onAction={requestCameraAction}
       />
       <div className="pointer-events-none fixed bottom-4 left-4 z-20 rounded border border-white/10 bg-[#12141d]/80 px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-white/50">
         {textureStatus === 'loaded'

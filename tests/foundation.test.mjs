@@ -17,6 +17,7 @@ import {
   readOnboardingState,
   writeOnboardingState,
 } from '../src/utils/onboarding.js';
+import { readFile as readSource } from 'node:fs/promises';
 
 test('converts Apollo 11 coordinates using the documented convention', () => {
   const actual = latLongToVector3(0.67408, 23.47297, 2.05);
@@ -117,6 +118,14 @@ test('versions onboarding persistence and ignores stale state', () => {
   assert.deepEqual(readOnboardingState(storage), {
     version: ONBOARDING_VERSION,
     status: 'completed',
+  });
+
+  test('exposes all camera actions and keyboard bindings', async () => {
+    const source = await readSource(new URL('../src/components/ui/CameraActions.jsx', import.meta.url), 'utf8');
+    for (const [label, key] of [['Reset view', 'R'], ['Focus mission', 'F'], ['Explore planet', 'G']]) {
+      assert.match(source, new RegExp(label));
+      assert.match(source, new RegExp(`key: '${key}'`));
+    }
   });
   values.set(ONBOARDING_STORAGE_KEY, JSON.stringify({ version: 'old', status: 'completed' }));
   assert.equal(readOnboardingState(storage), null);

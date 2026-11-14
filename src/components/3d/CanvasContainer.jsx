@@ -24,6 +24,7 @@ export default function CanvasContainer({
   selectedEquipmentId,
   onSelectEquipment,
   onTextureStatus,
+  cameraAction,
 }) {
   const controlsRef = useRef();
   const selected = equipment.find((item) => item.id === selectedEquipmentId);
@@ -52,7 +53,7 @@ export default function CanvasContainer({
         />
         <PlanetAtmosphere body={activeBody} />
       </Suspense>
-      <CameraController target={target} controlsRef={controlsRef} />
+      <CameraController target={target} action={cameraAction} controlsRef={controlsRef} />
       <OrbitControls
         ref={controlsRef}
         enableRotate
