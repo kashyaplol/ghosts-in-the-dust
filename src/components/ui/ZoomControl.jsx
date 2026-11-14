@@ -72,6 +72,12 @@ export default function ZoomControl({
       className={`instrument-panel pointer-events-auto fixed top-1/2 z-30 -translate-y-1/2 flex-col items-center gap-1.5 rounded-md px-1.5 py-2 transition-[right] duration-200 ${visibility} ${rightOffset}`}
       aria-label="Camera zoom control"
     >
+      <span
+        aria-hidden="true"
+        className="text-[9px] font-medium uppercase tracking-[0.16em] text-ink-muted"
+      >
+        ZOOM
+      </span>
       <button
         type="button"
         onClick={() => onZoomStep(1)}

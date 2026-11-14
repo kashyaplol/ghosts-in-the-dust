@@ -14,14 +14,15 @@ import {
 
 test('clamps camera distance within OrbitControls min and max bounds', () => {
   assert.equal(clampZoomDistance(1.2), MIN_ZOOM_DISTANCE);
-  assert.equal(clampZoomDistance(12), MAX_ZOOM_DISTANCE);
+  assert.equal(clampZoomDistance(MAX_ZOOM_DISTANCE + 3), MAX_ZOOM_DISTANCE);
   assert.equal(clampZoomDistance(5.55), 5.55);
 });
 
-test('adapts framing distance for portrait viewports without exceeding bounds', () => {
-  assert.equal(getResponsiveDistance(DEFAULT_DESKTOP_DISTANCE, 1.6), DEFAULT_DESKTOP_DISTANCE);
-  const portrait = getResponsiveDistance(DEFAULT_DESKTOP_DISTANCE, 390 / 844);
-  assert.ok(portrait > DEFAULT_DESKTOP_DISTANCE);
+test('adapts framing distance for desktop and mobile viewports without exceeding bounds', () => {
+  const desktop = getResponsiveDistance(DEFAULT_DESKTOP_DISTANCE, { width: 1440, height: 900 });
+  assert.equal(desktop, DEFAULT_DESKTOP_DISTANCE);
+  const portrait = getResponsiveDistance(DEFAULT_DESKTOP_DISTANCE, { width: 390, height: 844 });
+  assert.ok(portrait > desktop);
   assert.ok(portrait <= MAX_ZOOM_DISTANCE);
 });
 

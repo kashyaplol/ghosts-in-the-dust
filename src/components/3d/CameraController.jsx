@@ -9,21 +9,21 @@ import {
   getResponsiveDistance,
 } from '@/utils/cameraZoom';
 
-function getDestination(target, action, aspect) {
+function getDestination(target, action, viewport) {
   if (action?.type === 'explore') {
-    return new Vector3(0, 0, getResponsiveDistance(EXPLORE_DESKTOP_DISTANCE, aspect));
+    return new Vector3(0, 0, getResponsiveDistance(EXPLORE_DESKTOP_DISTANCE, viewport));
   }
   if (action?.type === 'focus' && target) {
     return new Vector3(...target)
       .normalize()
-      .multiplyScalar(getResponsiveDistance(FOCUS_DESKTOP_DISTANCE, aspect));
+      .multiplyScalar(getResponsiveDistance(FOCUS_DESKTOP_DISTANCE, viewport, false));
   }
   if (action?.type === 'reset' || !target) {
-    return new Vector3(0, 0, getResponsiveDistance(DEFAULT_DESKTOP_DISTANCE, aspect));
+    return new Vector3(0, 0, getResponsiveDistance(DEFAULT_DESKTOP_DISTANCE, viewport));
   }
   return new Vector3(...target)
     .normalize()
-    .multiplyScalar(getResponsiveDistance(FOCUS_DESKTOP_DISTANCE, aspect));
+    .multiplyScalar(getResponsiveDistance(FOCUS_DESKTOP_DISTANCE, viewport, false));
 }
 
 export default function CameraController({
@@ -38,11 +38,10 @@ export default function CameraController({
   const zoomAnimRef = useRef(null);
   const initializedRef = useRef(false);
   const lastReportedRef = useRef(camera.position.length());
-  const aspect = size.width / Math.max(1, size.height);
 
   useEffect(() => {
     const controls = controlsRef.current;
-    const destination = getDestination(target, action, aspect);
+    const destination = getDestination(target, action, size);
     zoomAnimRef.current = null;
 
     if (!initializedRef.current && !target && !action) {
