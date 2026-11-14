@@ -12,6 +12,7 @@ const filters = ['All', 'Moon', 'Mars'];
 
 export default function MissionTimeline({
   open,
+  compact = false,
   selectedEquipmentId,
   onSelectMission,
   onClose,
@@ -23,12 +24,16 @@ export default function MissionTimeline({
 
   if (!open) return null;
 
+  const maxHeightClass = compact
+    ? 'max-h-[calc(100vh-10.75rem)] lg:max-h-[calc(100vh-29.5rem)]'
+    : 'max-h-[calc(100vh-10.75rem)] lg:max-h-[calc(100vh-5.75rem)]';
+
   return (
     <section
-      className="instrument-panel pointer-events-auto fixed left-4 top-28 z-[44] flex max-h-[calc(100vh-12rem)] w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-lg sm:left-6 lg:top-20 lg:max-h-[calc(100vh-7rem)] sm:w-[376px]"
+      className={`instrument-panel pointer-events-auto fixed left-4 top-[92px] z-[44] flex w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-lg sm:left-5 sm:w-[340px] lg:top-[72px] ${maxHeightClass}`}
       aria-label="Historical mission timeline"
     >
-      <div className="shrink-0 border-b border-white/10 px-5 pb-4 pt-5">
+      <div className="shrink-0 border-b border-white/10 px-4 pb-3 pt-4">
         <PanelHeader
           eyebrow="Landing Chronology"
           eyebrowClass="text-ice-accent"
@@ -42,7 +47,7 @@ export default function MissionTimeline({
         </PanelHeader>
 
         <div
-          className="mt-4 inline-flex items-center rounded-md border border-white/12 bg-panel-recessed p-0.5"
+          className="mt-3 inline-flex items-center rounded-md border border-white/12 bg-panel-recessed p-0.5"
           role="group"
           aria-label="Timeline planet filter"
         >
@@ -68,7 +73,7 @@ export default function MissionTimeline({
       </div>
 
       <ol
-        className="archive-scroll min-h-0 flex-1 overflow-y-auto px-5 py-4"
+        className="archive-scroll min-h-0 flex-1 overflow-y-auto px-4 py-3"
         aria-label="Missions in chronological order"
       >
         {missions.map((mission, index) => {
@@ -76,7 +81,7 @@ export default function MissionTimeline({
           const bodyTheme = getBodyTheme(mission.body);
           const isLast = index === missions.length - 1;
           return (
-            <li key={mission.id} className="relative flex gap-3.5">
+            <li key={mission.id} className="relative flex gap-3">
               <div className="flex flex-col items-center pt-1.5" aria-hidden="true">
                 <span
                   className="h-2.5 w-2.5 shrink-0 rounded-full border-2 bg-panel-dark"
@@ -92,7 +97,7 @@ export default function MissionTimeline({
                 type="button"
                 onClick={() => onSelectMission(mission)}
                 aria-current={selected ? 'true' : undefined}
-                className={`mb-2.5 flex-1 rounded-md border px-3.5 py-2.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ice-accent/75 ${
+                className={`mb-2 flex-1 rounded-md border px-3 py-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ice-accent/75 ${
                   selected
                     ? 'border-ice-accent/55 bg-ice-accent/10'
                     : 'border-white/[0.08] bg-panel-recessed/50 hover:border-white/20 hover:bg-panel-elevated/70'

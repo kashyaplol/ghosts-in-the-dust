@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useState } from 'react';
+import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import CanvasContainer from '@/components/3d/CanvasContainer';
 import AudioPlayer from '@/components/ui/AudioPlayer';
 import Header from '@/components/ui/Header';
@@ -12,43 +12,46 @@ import PlanetLoadingOverlay from '@/components/ui/PlanetLoadingOverlay';
 import GuidedExploration from '@/components/ui/GuidedExploration';
 import MissionTimeline from '@/components/ui/MissionTimeline';
 import MissionComparison from '@/components/ui/MissionComparison';
+import ZoomControl from '@/components/ui/ZoomControl';
 import useOnboarding from '@/hooks/useOnboarding';
 import useMissionSearch from '@/hooks/useMissionSearch';
 import useKeyboardShortcuts from '@/hooks/useKeyboardShortcuts';
 import { useSpaceContext } from '@/context/SpaceContext';
 import { ASSET_STATES } from '@/utils/assetStatus';
+import { DEFAULT_DESKTOP_DISTANCE, stepZoomDistance } from '@/utils/cameraZoom';
 
 export default function App() {
   const {
-    activeBody,
-    selectedEquipment,
-    selectedEquipmentId,
-    isInspectorOpen,
-    isPlayingAudio,
-    isAudioOpen,
-    clearSelection,
-    openInspector,
-    closeInspector,
-    selectEquipment,
-    startAudio,
-    stopAudio,
-    closeAudio,
+    activeBody, selectedEquipment, selectedEquipmentId, isInspectorOpen, isPlayingAudio,
+    isAudioOpen, clearSelection, openInspector, closeInspector, selectEquipment,
+    startAudio, stopAudio, closeAudio,
   } = useSpaceContext();
-  const [textureStatuses, setTextureStatuses] = useState({
-    Moon: ASSET_STATES.LOADING,
-    Mars: ASSET_STATES.NOT_REQUESTED,
-  });
+  const [textureStatuses, setTextureStatuses] = useState({ Moon: ASSET_STATES.LOADING, Mars: ASSET_STATES.NOT_REQUESTED });
   const [rendererReady, setRendererReady] = useState(false);
   const [cameraAction, setCameraAction] = useState(null);
+  const [cameraDistance, setCameraDistance] = useState(DEFAULT_DESKTOP_DISTANCE);
+  const [zoomRequest, setZoomRequest] = useState(null);
+  const distanceRef = useRef(DEFAULT_DESKTOP_DISTANCE);
   const [searchOpen, setSearchOpen] = useState(false);
   const [shortcutGuideOpen, setShortcutGuideOpen] = useState(false);
   const [guidedOpen, setGuidedOpen] = useState(false);
   const [timelineOpen, setTimelineOpen] = useState(false);
   const [comparisonOpen, setComparisonOpen] = useState(false);
   const { isOpen: isTutorialOpen, finish, replay } = useOnboarding();
-  const requestCameraAction = useCallback((type) => {
-    setCameraAction({ type, nonce: Date.now() });
+  const requestCameraAction = useCallback((type) => setCameraAction({ type, nonce: Date.now() }), []);
+  const handleZoomChange = useCallback((distance) => {
+    distanceRef.current = distance;
+    setCameraDistance(distance);
   }, []);
+  const handleZoomSet = useCallback((distance, smooth = false) => {
+    distanceRef.current = distance;
+    setCameraDistance(distance);
+    setZoomRequest({ distance, smooth, nonce: Date.now() });
+  }, []);
+  const handleZoomStep = useCallback((direction) => {
+    const next = stepZoomDistance(distanceRef.current, direction);
+    handleZoomSet(next, true);
+  }, [handleZoomSet]);
   const handleRendererReady = useCallback(() => setRendererReady(true), []);
   const selectMission = useCallback((mission) => {
     selectEquipment(mission.id);
@@ -99,22 +102,22 @@ export default function App() {
         selectedEquipmentId={selectedEquipmentId}
         onSelectEquipment={selectEquipment}
         cameraAction={cameraAction}
+        zoomRequest={zoomRequest}
+        onZoomChange={handleZoomChange}
         onTextureStatus={handleTextureStatus}
         onRendererReady={handleRendererReady}
         textureStatus={currentTextureStatus}
       />
-      <CameraActions
-        hasSelection={Boolean(selectedEquipmentId)}
-        onAction={requestCameraAction}
+      <CameraActions hasSelection={Boolean(selectedEquipmentId)} onAction={requestCameraAction} />
+      <ZoomControl
+        distance={cameraDistance}
+        onZoomSet={handleZoomSet}
+        onZoomStep={handleZoomStep}
+        telemetryOpen={Boolean(selectedEquipment)}
+        hideOnMobile={Boolean(selectedEquipment || timelineOpen || guidedOpen || isAudioOpen || isInspectorOpen || comparisonOpen)}
       />
-      <LoadingScreen
-        visible={loadingVisible}
-        ready={rendererReady}
-        stage={!rendererReady ? 'Initializing planetary renderer' : 'Loading planetary surface assets'}
-      />
-      {rendererReady && (
-        <PlanetLoadingOverlay body={activeBody} status={currentTextureStatus} />
-      )}
+      <LoadingScreen visible={loadingVisible} ready={rendererReady} stage={!rendererReady ? 'Initializing planetary renderer' : 'Loading planetary surface assets'} />
+      {rendererReady && <PlanetLoadingOverlay body={activeBody} status={currentTextureStatus} />}
       <div className="pointer-events-none fixed inset-x-0 top-0 z-40">
         <Header
           onReplayTutorial={replay}
@@ -133,31 +136,14 @@ export default function App() {
         />
       </div>
       <div className="pointer-events-none fixed inset-0 z-10 flex flex-col">
-        <TelemetryHUD
-          selectedEquipment={selectedEquipment}
-          onClose={clearSelection}
-          onOpenInspector={openInspector}
-          onPlayAudio={startAudio}
-        />
+        <TelemetryHUD selectedEquipment={selectedEquipment} onClose={clearSelection} onOpenInspector={openInspector} onPlayAudio={startAudio} />
       </div>
-      {isInspectorOpen && (
-        <HardwareInspector
-          equipment={selectedEquipment}
-          onClose={closeInspector}
-        />
-      )}
-      {isAudioOpen && (
-        <AudioPlayer
-          equipment={selectedEquipment}
-          isPlaying={isPlayingAudio}
-          onPlay={startAudio}
-          onStop={stopAudio}
-          onClose={closeAudio}
-        />
-      )}
+      {isInspectorOpen && <HardwareInspector equipment={selectedEquipment} onClose={closeInspector} />}
+      {isAudioOpen && <AudioPlayer equipment={selectedEquipment} isPlaying={isPlayingAudio} onPlay={startAudio} onStop={stopAudio} onClose={closeAudio} />}
       {shortcutGuideOpen && <ShortcutGuide onClose={() => setShortcutGuideOpen(false)} />}
       <MissionTimeline
         open={timelineOpen}
+        compact={isAudioOpen}
         selectedEquipmentId={selectedEquipmentId}
         onSelectMission={(mission) => {
           selectMission(mission);

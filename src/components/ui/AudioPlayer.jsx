@@ -116,7 +116,7 @@ export default function AudioPlayer({ equipment, isPlaying, onPlay, onStop, onCl
 
   return (
     <section
-      className="instrument-panel archive-scroll pointer-events-auto fixed bottom-16 left-4 z-[35] max-h-[calc(100vh-12rem)] w-[calc(100vw-2rem)] overflow-y-auto rounded-lg p-5 sm:left-6 lg:bottom-6 lg:max-h-[70vh] sm:w-[410px]"
+      className="instrument-panel archive-scroll pointer-events-auto fixed bottom-16 left-4 z-[35] max-h-[calc(100vh-10.75rem)] w-[calc(100vw-2rem)] overflow-y-auto rounded-lg p-4 sm:left-5 sm:w-[364px] lg:bottom-5 lg:max-h-[48vh]"
       role="dialog"
       aria-modal="false"
       aria-label={`${equipment.name} Final Hours transmission`}
@@ -128,7 +128,7 @@ export default function AudioPlayer({ equipment, isPlaying, onPlay, onStop, onCl
         onClose={onClose}
         closeLabel="Close transmission log"
       />
-      <div className="mt-4 flex items-center justify-between gap-3 border-y border-white/10 py-2">
+      <div className="mt-3 flex items-center justify-between gap-3 border-y border-white/10 py-1.5">
         <p className="font-mono text-[11px] text-solar-amber" role="status" aria-live="polite">{statusText}</p>
         {hasTranscript && (
           <Button variant="tertiary" size="sm" onClick={() => setExpanded((value) => !value)} aria-expanded={expanded} className="!h-7 !px-2 text-[11px]">
@@ -137,19 +137,19 @@ export default function AudioPlayer({ equipment, isPlaying, onPlay, onStop, onCl
           </Button>
         )}
       </div>
-      {notice && <p className="mt-3 text-xs leading-relaxed text-solar-amber" role="status">{notice}</p>}
-      {error && <p className="mt-3 text-xs leading-relaxed text-alert-red" role="alert">{error}</p>}
+      {notice && <p className="mt-2.5 text-xs leading-relaxed text-solar-amber" role="status">{notice}</p>}
+      {error && <p className="mt-2.5 text-xs leading-relaxed text-alert-red" role="alert">{error}</p>}
       {hasTranscript ? (
-        <div className={`archive-scroll mt-4 overflow-y-auto border-l border-white/15 pl-3.5 ${expanded ? 'max-h-[34vh]' : 'max-h-20'}`}>
+        <div className={`archive-scroll mt-3 overflow-y-auto border-l border-white/15 pl-3 ${expanded ? 'max-h-[20vh]' : 'max-h-16'}`}>
           <p className="whitespace-pre-line font-display text-[15px] italic leading-7 text-ink-primary/90">
             &ldquo;{transcript}&rdquo;
           </p>
         </div>
       ) : (
-        <p className="mt-4 text-sm leading-relaxed text-ink-muted">No transmission transcript is available for this mission.</p>
+        <p className="mt-3 text-sm leading-relaxed text-ink-muted">No transmission transcript is available for this mission.</p>
       )}
       {hasTranscript && (
-        <div className="mt-4 border-t border-white/10 pt-4">
+        <div className="mt-3 border-t border-white/10 pt-3">
           <div className="flex items-center justify-between gap-3">
             <Button variant={isPlaying ? 'danger' : 'primary'} size="sm" onClick={isPlaying ? onStop : onPlay}>
               {isPlaying ? <Pause size={13} aria-hidden="true" /> : <Play size={13} aria-hidden="true" />}

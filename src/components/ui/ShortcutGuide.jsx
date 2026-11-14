@@ -13,7 +13,7 @@ const shortcuts = [
 export default function ShortcutGuide({ onClose }) {
   return (
     <aside
-      className="instrument-panel pointer-events-auto fixed right-4 top-28 z-[60] w-[calc(100vw-2rem)] rounded-lg p-5 sm:right-6 lg:top-20 sm:w-[360px]"
+      className="instrument-panel pointer-events-auto fixed right-4 top-[92px] z-[60] max-h-[calc(100vh-10.75rem)] w-[calc(100vw-2rem)] overflow-y-auto rounded-lg p-5 sm:right-5 sm:w-[348px] lg:top-[72px]"
       role="dialog"
       aria-label="Keyboard shortcuts"
     >

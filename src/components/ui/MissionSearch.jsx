@@ -49,7 +49,7 @@ export default function MissionSearch({
           setQuery(event.target.value);
         }}
         placeholder="Search missions"
-        className="h-8 w-full rounded-md border border-white/12 bg-panel-recessed pl-8 pr-8 text-xs text-ink-primary placeholder:text-ink-muted outline-none transition-colors focus:border-ice-accent/65 focus:bg-panel-elevated"
+        className={`h-8 w-full rounded-md border border-white/12 bg-panel-recessed pl-8 text-xs text-ink-primary placeholder:text-ink-muted outline-none transition-colors focus:border-ice-accent/65 focus:bg-panel-elevated ${query || filtersActive ? 'pr-7' : 'pr-2.5 sm:pr-8'}`}
         aria-controls="mission-results"
         aria-expanded={Boolean(visible)}
         aria-autocomplete="list"

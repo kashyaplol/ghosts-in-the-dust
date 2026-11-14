@@ -99,7 +99,7 @@ export default function GuidedExploration({
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -18 }}
           transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="instrument-panel archive-scroll pointer-events-auto fixed bottom-16 left-4 z-[45] max-h-[calc(100vh-12rem)] w-[calc(100vw-2rem)] overflow-y-auto rounded-lg p-5 sm:left-6 lg:bottom-6 lg:max-h-[76vh] sm:w-[400px]"
+          className="instrument-panel archive-scroll pointer-events-auto fixed bottom-16 left-4 z-[45] max-h-[calc(100vh-10.75rem)] w-[calc(100vw-2rem)] overflow-y-auto rounded-lg p-4 sm:left-5 sm:w-[376px] lg:bottom-5 lg:max-h-[76vh]"
           aria-label="Guided mission exploration"
         >
           <PanelHeader

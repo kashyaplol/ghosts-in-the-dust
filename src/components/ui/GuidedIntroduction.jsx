@@ -44,7 +44,7 @@ export default function GuidedIntroduction({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 12 }}
       transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-      className="instrument-panel pointer-events-auto fixed left-4 top-28 z-[45] w-[calc(100vw-2rem)] rounded-lg p-5 sm:left-6 lg:top-20 sm:w-[400px] sm:p-6"
+      className="instrument-panel pointer-events-auto fixed left-4 top-[92px] z-[45] max-h-[calc(100vh-10.75rem)] w-[calc(100vw-2rem)] overflow-y-auto rounded-lg p-5 sm:left-5 sm:w-[380px] lg:top-[72px]"
       role="dialog"
       aria-modal="false"
       aria-label="Guided exploration introduction"
