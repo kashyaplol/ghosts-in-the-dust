@@ -8,7 +8,6 @@ import TutorialOverlay from '@/components/ui/TutorialOverlay';
 import CameraActions from '@/components/ui/CameraActions';
 import ShortcutGuide from '@/components/ui/ShortcutGuide';
 import LoadingScreen from '@/components/ui/LoadingScreen';
-import AssetStatus from '@/components/ui/AssetStatus';
 import PlanetLoadingOverlay from '@/components/ui/PlanetLoadingOverlay';
 import GuidedExploration from '@/components/ui/GuidedExploration';
 import MissionTimeline from '@/components/ui/MissionTimeline';
@@ -106,7 +105,6 @@ export default function App() {
         hasSelection={Boolean(selectedEquipmentId)}
         onAction={requestCameraAction}
       />
-      <AssetStatus body={activeBody} status={currentTextureStatus} />
       <LoadingScreen
         visible={loadingVisible}
         ready={rendererReady}
@@ -115,7 +113,7 @@ export default function App() {
       {rendererReady && (
         <PlanetLoadingOverlay body={activeBody} status={currentTextureStatus} />
       )}
-      <div className="pointer-events-none fixed inset-0 z-10 flex flex-col">
+      <div className="pointer-events-none fixed inset-x-0 top-0 z-40">
         <Header
           onReplayTutorial={replay}
           onToggleShortcuts={toggleShortcutGuide}
@@ -127,6 +125,8 @@ export default function App() {
           onStartGuidedExploration={() => setGuidedOpen(true)}
           onToggleTimeline={() => setTimelineOpen((open) => !open)}
         />
+      </div>
+      <div className="pointer-events-none fixed inset-0 z-10 flex flex-col">
         <TelemetryHUD
           selectedEquipment={selectedEquipment}
           onClose={clearSelection}

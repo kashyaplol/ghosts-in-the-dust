@@ -18,7 +18,7 @@ export default function Header({
   const missionCount = equipment.filter((item) => item.body === activeBody).length;
 
   return (
-    <header className="pointer-events-auto z-40 flex w-full flex-wrap items-center justify-between gap-4 border-b border-white/10 bg-[#08090c]/80 px-6 py-4 backdrop-blur-md">
+    <header className="pointer-events-auto relative z-40 flex w-full flex-wrap items-center justify-between gap-4 border-b border-white/10 bg-[#08090c]/80 px-6 py-4 backdrop-blur-md">
       <div>
         <p className="font-mono text-xs uppercase tracking-[0.3em] text-white/50">NASA // DEEP SPACE ARCHIVE</p>
         <h1 className="mt-1 text-xl font-semibold tracking-widest text-[#00f3ff]">Ghosts in the Dust</h1>
@@ -59,10 +59,6 @@ export default function Header({
         >
           <Clock3 size={14} /> <span className="hidden xl:inline">TIMELINE</span>
         </button>
-        <div className="hidden items-center gap-2 font-mono text-xs text-[#00f3ff] sm:flex">
-          <span className="h-2 w-2 animate-pulse rounded-full bg-[#00f3ff]" aria-hidden="true" />
-          <span>SYSTEM ONLINE // 3D WEBGL ACTIVE</span>
-        </div>
         <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
           {missionCount} {missionCount === 1 ? 'MISSION' : 'MISSIONS'} TRACKED
         </span>
