@@ -10,6 +10,7 @@ import ShortcutGuide from '@/components/ui/ShortcutGuide';
 import LoadingScreen from '@/components/ui/LoadingScreen';
 import AssetStatus from '@/components/ui/AssetStatus';
 import PlanetLoadingOverlay from '@/components/ui/PlanetLoadingOverlay';
+import GuidedExploration from '@/components/ui/GuidedExploration';
 import useOnboarding from '@/hooks/useOnboarding';
 import useMissionSearch from '@/hooks/useMissionSearch';
 import useKeyboardShortcuts from '@/hooks/useKeyboardShortcuts';
@@ -40,6 +41,7 @@ export default function App() {
   const [cameraAction, setCameraAction] = useState(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [shortcutGuideOpen, setShortcutGuideOpen] = useState(false);
+  const [guidedOpen, setGuidedOpen] = useState(false);
   const { isOpen: isTutorialOpen, finish, replay } = useOnboarding();
   const requestCameraAction = useCallback((type) => {
     setCameraAction({ type, nonce: Date.now() });
@@ -120,6 +122,7 @@ export default function App() {
           onOpenSearch={() => setSearchOpen(true)}
           onDismissSearch={closeSearch}
           onSelectMission={selectMission}
+          onStartGuidedExploration={() => setGuidedOpen(true)}
         />
         <TelemetryHUD
           selectedEquipment={selectedEquipment}
@@ -144,6 +147,17 @@ export default function App() {
         />
       )}
       {shortcutGuideOpen && <ShortcutGuide onClose={() => setShortcutGuideOpen(false)} />}
+      <GuidedExploration
+        open={guidedOpen}
+        activeBody={activeBody}
+        selectedEquipmentId={selectedEquipmentId}
+        textureStatus={currentTextureStatus}
+        rendererReady={rendererReady}
+        onCameraAction={requestCameraAction}
+        onExit={() => setGuidedOpen(false)}
+        onOpenInspector={openInspector}
+        onPlayAudio={startAudio}
+      />
       <TutorialOverlay open={isTutorialOpen} onFinish={finish} />
     </main>
   );
