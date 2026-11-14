@@ -30,7 +30,8 @@ export function SpaceProvider({ children }) {
   }, []);
   const selectEquipment = useCallback((id) => {
     const mission = equipment.find((item) => item.id === id);
-    if (mission && mission.body === activeBody) {
+    if (mission) {
+      if (mission.body !== activeBody) setActiveBody(mission.body);
       setSelectedEquipmentId(id);
       setInspectorOpen(false);
       setPlayingAudio(false);

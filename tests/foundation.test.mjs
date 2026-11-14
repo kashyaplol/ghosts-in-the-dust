@@ -11,6 +11,7 @@ import {
   dotProduct,
 } from '../src/utils/planetLighting.js';
 import { getHardwareImage, hasHardwareImage } from '../src/utils/hardwareImages.js';
+import { filterMissions, getLandingYears, getMissionStatuses } from '../src/utils/missionSearch.js';
 import {
   ONBOARDING_STORAGE_KEY,
   ONBOARDING_VERSION,
@@ -119,22 +120,37 @@ test('versions onboarding persistence and ignores stale state', () => {
     version: ONBOARDING_VERSION,
     status: 'completed',
   });
-
-  test('exposes all camera actions and keyboard bindings', async () => {
-    const source = await readSource(new URL('../src/components/ui/CameraActions.jsx', import.meta.url), 'utf8');
-    for (const [label, key] of [['Reset view', 'R'], ['Focus mission', 'F'], ['Explore planet', 'G']]) {
-      assert.match(source, new RegExp(label));
-      assert.match(source, new RegExp(`key: '${key}'`));
-    }
-  });
-
-  test('keeps planetary surfaces opaque during texture transitions', async () => {
-    const source = await readSource(new URL('../src/components/3d/PlanetSurface.jsx', import.meta.url), 'utf8');
-    assert.match(source, /transparent=\{false\}/);
-    assert.match(source, /opacity=\{1\}/);
-    assert.match(source, /depthWrite/);
-    assert.doesNotMatch(source, /transparent\s*(\r?\n\s*)?opacity=\{0\}/);
-  });
   values.set(ONBOARDING_STORAGE_KEY, JSON.stringify({ version: 'old', status: 'completed' }));
   assert.equal(readOnboardingState(storage), null);
+});
+
+test('exposes all camera actions and keyboard bindings', async () => {
+  const source = await readSource(new URL('../src/components/ui/CameraActions.jsx', import.meta.url), 'utf8');
+  for (const [label, key] of [['Reset view', 'R'], ['Focus mission', 'F'], ['Explore planet', 'G']]) {
+    assert.match(source, new RegExp(label));
+    assert.match(source, new RegExp(`key: '${key}'`));
+  }
+});
+
+test('keeps planetary surfaces opaque during texture transitions', async () => {
+  const source = await readSource(new URL('../src/components/3d/PlanetSurface.jsx', import.meta.url), 'utf8');
+  assert.match(source, /transparent=\{false\}/);
+  assert.match(source, /opacity=\{1\}/);
+  assert.match(source, /depthWrite/);
+  assert.doesNotMatch(source, /transparent\s*(\r?\n\s*)?opacity=\{0\}/);
+});
+
+test('filters missions using real searchable metadata', async () => {
+  const missions = JSON.parse(await readFile(new URL('../src/data/equipment.json', import.meta.url)));
+  assert.equal(filterMissions(missions, { query: 'opportunity' }).length, 1);
+  assert.equal(filterMissions(missions, { query: 'apollo' }).length, 2);
+  assert.equal(filterMissions(missions, { query: 'curiosity-msl' }).length, 1);
+  assert.equal(filterMissions(missions, { body: 'Moon' }).every((item) => item.body === 'Moon'), true);
+  assert.equal(filterMissions(missions, { body: 'Mars' }).every((item) => item.body === 'Mars'), true);
+  assert.equal(filterMissions(missions, { status: 'Lost Contact' }).length, 2);
+  assert.deepEqual(filterMissions(missions, { year: '2012' }).map((item) => item.id), ['curiosity-msl']);
+  assert.equal(filterMissions(missions, { body: 'Mars', status: 'Mission Complete', year: '2021' }).length, 1);
+  assert.equal(filterMissions(missions, { query: 'not-a-mission' }).length, 0);
+  assert.deepEqual(getMissionStatuses(missions), ['Decommissioned', 'Lost Contact', 'Operational', 'Mission Complete']);
+  assert.deepEqual(getLandingYears(missions), ['1969', '1971', '1976', '2004', '2012', '2021']);
 });
