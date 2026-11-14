@@ -14,7 +14,7 @@ function LoadingGlobe() {
   return (
     <mesh>
       <sphereGeometry args={[2, 24, 24]} />
-      <meshStandardMaterial color="#252936" wireframe />
+      <meshStandardMaterial color="#252936" roughness={0.9} />
     </mesh>
   );
 }
@@ -25,6 +25,7 @@ export default function CanvasContainer({
   onSelectEquipment,
   onTextureStatus,
   cameraAction,
+  onRendererReady,
 }) {
   const controlsRef = useRef();
   const selected = equipment.find((item) => item.id === selectedEquipmentId);
@@ -40,6 +41,7 @@ export default function CanvasContainer({
       camera={{ position: [0, 0, 5], fov: 45, near: 0.1, far: 100 }}
       dpr={[1, 1.75]}
       gl={{ antialias: true, logarithmicDepthBuffer: true }}
+      onCreated={() => onRendererReady?.()}
     >
       <color attach="background" args={['#08090c']} />
       <DeepSpaceBackground />

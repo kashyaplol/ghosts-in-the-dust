@@ -12,6 +12,7 @@ import {
 } from '../src/utils/planetLighting.js';
 import { getHardwareImage, hasHardwareImage } from '../src/utils/hardwareImages.js';
 import { filterMissions, getLandingYears, getMissionStatuses } from '../src/utils/missionSearch.js';
+import { ASSET_STATES, getTextureStatusLabel } from '../src/utils/assetStatus.js';
 import {
   ONBOARDING_STORAGE_KEY,
   ONBOARDING_VERSION,
@@ -153,4 +154,22 @@ test('filters missions using real searchable metadata', async () => {
   assert.equal(filterMissions(missions, { query: 'not-a-mission' }).length, 0);
   assert.deepEqual(getMissionStatuses(missions), ['Decommissioned', 'Lost Contact', 'Operational', 'Mission Complete']);
   assert.deepEqual(getLandingYears(missions), ['1969', '1971', '1976', '2004', '2012', '2021']);
+});
+
+test('models independent texture states and honest fallback labels', () => {
+  assert.equal(ASSET_STATES.NOT_REQUESTED, 'not-requested');
+  assert.equal(getTextureStatusLabel(ASSET_STATES.LOADING), 'surface texture loading');
+  assert.equal(getTextureStatusLabel(ASSET_STATES.LOADED), 'NASA surface texture active');
+  assert.equal(getTextureStatusLabel(ASSET_STATES.FAILED), 'procedural surface fallback active');
+  assert.equal(getTextureStatusLabel(ASSET_STATES.FALLBACK), 'procedural surface fallback active');
+});
+
+test('exposes focused audio and loading fallback states', async () => {
+  const audio = await readSource(new URL('../src/components/ui/AudioPlayer.jsx', import.meta.url), 'utf8');
+  const loading = await readSource(new URL('../src/components/ui/LoadingScreen.jsx', import.meta.url), 'utf8');
+  assert.match(audio, /Speech synthesis is unavailable/);
+  assert.match(audio, /No transmission transcript is available/);
+  assert.match(audio, /Speech playback failed/);
+  assert.match(loading, /role="status"/);
+  assert.match(loading, /Loading stage/);
 });

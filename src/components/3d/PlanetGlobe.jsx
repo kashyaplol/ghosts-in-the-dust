@@ -34,12 +34,12 @@ export default function PlanetGlobe({
   const lastBody = useRef(activeBody);
   const [previousBody, setPreviousBody] = useState(null);
   const reportTextureLoaded = useCallback(
-    () => onTextureStatus?.('loaded'),
-    [onTextureStatus],
+    () => onTextureStatus?.(activeBody, 'loaded'),
+    [activeBody, onTextureStatus],
   );
   const reportTextureFallback = useCallback(
-    () => onTextureStatus?.('fallback'),
-    [onTextureStatus],
+    () => onTextureStatus?.(activeBody, 'failed'),
+    [activeBody, onTextureStatus],
   );
 
   useEffect(() => {

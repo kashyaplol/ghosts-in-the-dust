@@ -37,7 +37,7 @@ export default function TelemetryHUD({
   onPlayAudio,
 }) {
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       {selectedEquipment && (
         <motion.section
           data-tutorial="telemetry"

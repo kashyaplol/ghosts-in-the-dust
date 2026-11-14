@@ -7,10 +7,13 @@ import TelemetryHUD from '@/components/ui/TelemetryHUD';
 import TutorialOverlay from '@/components/ui/TutorialOverlay';
 import CameraActions from '@/components/ui/CameraActions';
 import ShortcutGuide from '@/components/ui/ShortcutGuide';
+import LoadingScreen from '@/components/ui/LoadingScreen';
+import AssetStatus from '@/components/ui/AssetStatus';
 import useOnboarding from '@/hooks/useOnboarding';
 import useMissionSearch from '@/hooks/useMissionSearch';
 import useKeyboardShortcuts from '@/hooks/useKeyboardShortcuts';
 import { useSpaceContext } from '@/context/SpaceContext';
+import { ASSET_STATES } from '@/utils/assetStatus';
 
 export default function App() {
   const {
@@ -28,7 +31,11 @@ export default function App() {
     stopAudio,
     closeAudio,
   } = useSpaceContext();
-  const [textureStatus, setTextureStatus] = useState('loading');
+  const [textureStatuses, setTextureStatuses] = useState({
+    Moon: ASSET_STATES.LOADING,
+    Mars: ASSET_STATES.NOT_REQUESTED,
+  });
+  const [rendererReady, setRendererReady] = useState(false);
   const [cameraAction, setCameraAction] = useState(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [shortcutGuideOpen, setShortcutGuideOpen] = useState(false);
@@ -70,8 +77,13 @@ export default function App() {
   });
 
   useEffect(() => {
-    setTextureStatus('loading');
+    setTextureStatuses((current) => ({ ...current, [activeBody]: ASSET_STATES.LOADING }));
   }, [activeBody]);
+  const handleTextureStatus = useCallback((body, status) => {
+    setTextureStatuses((current) => ({ ...current, [body]: status }));
+  }, []);
+  const currentTextureStatus = textureStatuses[activeBody];
+  const loadingVisible = !rendererReady || currentTextureStatus === ASSET_STATES.LOADING;
 
   return (
     <main className="relative h-screen w-screen overflow-hidden bg-space-black">
@@ -79,20 +91,20 @@ export default function App() {
         activeBody={activeBody}
         selectedEquipmentId={selectedEquipmentId}
         onSelectEquipment={selectEquipment}
-        onTextureStatus={setTextureStatus}
         cameraAction={cameraAction}
+        onTextureStatus={handleTextureStatus}
+        onRendererReady={() => setRendererReady(true)}
       />
       <CameraActions
         hasSelection={Boolean(selectedEquipmentId)}
         onAction={requestCameraAction}
       />
-      <div className="pointer-events-none fixed bottom-4 left-4 z-20 rounded border border-white/10 bg-[#12141d]/80 px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-white/50">
-        {textureStatus === 'loaded'
-          ? `${activeBody} NASA surface texture active`
-          : textureStatus === 'loading'
-            ? `${activeBody} surface texture loading`
-            : `${activeBody} procedural surface fallback — NASA texture unavailable`}
-      </div>
+      <AssetStatus body={activeBody} status={currentTextureStatus} />
+      <LoadingScreen
+        visible={loadingVisible}
+        ready={rendererReady}
+        stage={!rendererReady ? 'Initializing planetary renderer' : 'Loading planetary surface assets'}
+      />
       <div className="pointer-events-none fixed inset-0 z-10 flex flex-col">
         <Header
           onReplayTutorial={replay}

@@ -8,12 +8,20 @@ import {
 export default function AudioPlayer({ equipment, isPlaying, onPlay, onStop, onClose }) {
   const [supported, setSupported] = useState(true);
   const [spokenCharacters, setSpokenCharacters] = useState(0);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const speech = typeof window !== 'undefined' ? window.speechSynthesis : null;
     if (!isSpeechSynthesisSupported()) {
       setSupported(false);
+      setError('Speech synthesis is unavailable in this browser.');
       return undefined;
+    }
+    if (!speech.getVoices().length) {
+      setError('No speech voices are available. The transcript remains readable.');
+    } else {
+      setSupported(true);
+      setError('');
     }
     speech.cancel();
     setSpokenCharacters(0);
@@ -22,16 +30,26 @@ export default function AudioPlayer({ equipment, isPlaying, onPlay, onStop, onCl
 
   useEffect(() => {
     if (!isPlaying || !supported || !equipment) return undefined;
+    const transcript = equipment.narrativeTranscript?.trim();
+    if (!transcript) {
+      setError('No transmission transcript is available for this mission.');
+      onStop();
+      return undefined;
+    }
+    setError('');
     setSpokenCharacters(0);
-    const utterance = new window.SpeechSynthesisUtterance(equipment.narrativeTranscript);
+    const utterance = new window.SpeechSynthesisUtterance(transcript);
     utterance.pitch = 0.85;
     utterance.rate = 0.9;
     utterance.onboundary = (event) => setSpokenCharacters(event.charIndex);
     utterance.onend = () => {
-      setSpokenCharacters(equipment.narrativeTranscript.length);
+      setSpokenCharacters(transcript.length);
       onStop();
     };
-    utterance.onerror = onStop;
+    utterance.onerror = (event) => {
+      if (event.error !== 'canceled') setError('Speech playback failed. You can replay the transcript.');
+      onStop();
+    };
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(utterance);
     return () => window.speechSynthesis.cancel();
@@ -56,11 +74,12 @@ export default function AudioPlayer({ equipment, isPlaying, onPlay, onStop, onCl
         </button>
       </div>
       {!supported ? (
-        <p className="mt-5 text-sm text-[#ff4d4d]">Speech synthesis is unavailable in this browser.</p>
+        <p className="mt-5 text-sm text-[#ff4d4d]" role="alert">{error}</p>
       ) : !hasTranscript ? (
         <p className="mt-5 text-sm text-white/60">No transmission transcript is available for this mission.</p>
       ) : (
         <>
+          {error && <p className="mt-5 text-sm text-[#ffb703]" role="alert">{error}</p>}
           <p className="mt-5 text-sm leading-relaxed text-white/80">
             {transcript.slice(0, spokenCharacters)}
             <span className="text-white/40">{transcript.slice(spokenCharacters)}</span>
