@@ -61,7 +61,7 @@ export default function AudioPlayer({ equipment, isPlaying, onPlay, onStop, onCl
   const hasTranscript = transcript.trim().length > 0;
 
   return (
-    <div className="pointer-events-auto fixed bottom-6 left-1/2 z-50 w-[min(92vw,640px)] -translate-x-1/2 rounded-xl border border-[#00f3ff]/30 bg-[#12141d]/95 p-5 shadow-2xl backdrop-blur-md">
+    <div className="pointer-events-auto fixed bottom-6 left-1/2 z-50 max-h-[46vh] w-[min(92vw,520px)] -translate-x-1/2 overflow-y-auto rounded-xl border border-[#00f3ff]/30 bg-[#12141d]/95 p-5 shadow-2xl backdrop-blur-md lg:left-6 lg:translate-x-0">
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#00f3ff]">

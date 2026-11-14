@@ -44,6 +44,7 @@ export default function App() {
   const requestCameraAction = useCallback((type) => {
     setCameraAction({ type, nonce: Date.now() });
   }, []);
+  const handleRendererReady = useCallback(() => setRendererReady(true), []);
   const selectMission = useCallback((mission) => {
     selectEquipment(mission.id);
     setSearchOpen(false);
@@ -94,7 +95,7 @@ export default function App() {
         onSelectEquipment={selectEquipment}
         cameraAction={cameraAction}
         onTextureStatus={handleTextureStatus}
-        onRendererReady={() => setRendererReady(true)}
+        onRendererReady={handleRendererReady}
         textureStatus={currentTextureStatus}
       />
       <CameraActions

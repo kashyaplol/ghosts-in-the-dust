@@ -1,7 +1,7 @@
 import { useFrame } from '@react-three/fiber';
-import { useRef, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 
-export default function MarkerPin({ mission, selected, onSelect }) {
+function MarkerPin({ mission, selected, onSelect }) {
   const markerRef = useRef();
   const [hovered, setHovered] = useState(false);
   const position = mission.position;
@@ -42,3 +42,5 @@ export default function MarkerPin({ mission, selected, onSelect }) {
     </mesh>
   );
 }
+
+export default memo(MarkerPin);

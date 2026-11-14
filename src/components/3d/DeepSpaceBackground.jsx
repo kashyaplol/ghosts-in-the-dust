@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { AdditiveBlending, Color, DoubleSide } from 'three';
 
 const starVertex = `
@@ -44,7 +44,7 @@ function createStars(count, radius, seed) {
     colors[offset] = 0.72 + temperature * 0.28;
     colors[offset + 1] = 0.78 + (1 - temperature) * 0.2;
     colors[offset + 2] = 0.92 + temperature * 0.08;
-    sizes[index] = 0.08 + random() * 0.16;
+    sizes[index] = 0.18 + random() * 0.3;
   }
   return { positions, colors, sizes };
 }
@@ -105,15 +105,17 @@ function NebulaCloud({ position, scale, color, opacity }) {
   );
 }
 
-export default function DeepSpaceBackground() {
+function DeepSpaceBackground() {
   return (
     <group>
-      <StarLayer count={620} radius={30} seed={17} opacity={0.85} />
-      <StarLayer count={240} radius={22} seed={91} opacity={0.65} />
-      <StarLayer count={70} radius={12} seed={173} opacity={0.9} />
-      <NebulaCloud position={[-8, 3, -14]} scale={[9, 3.5, 1]} color="#25204d" opacity={0.22} />
-      <NebulaCloud position={[8, -4, -18]} scale={[8, 2.8, 1]} color="#3a2544" opacity={0.16} />
-      <NebulaCloud position={[0, 7, -22]} scale={[12, 2, 1]} color="#182c50" opacity={0.12} />
+      <StarLayer count={760} radius={30} seed={17} opacity={0.95} />
+      <StarLayer count={300} radius={22} seed={91} opacity={0.78} />
+      <StarLayer count={90} radius={12} seed={173} opacity={1} />
+      <NebulaCloud position={[-6, 2, -16]} scale={[14, 5, 1]} color="#25204d" opacity={0.3} />
+      <NebulaCloud position={[7, -3, -20]} scale={[12, 4, 1]} color="#3a2544" opacity={0.24} />
+      <NebulaCloud position={[0, 6, -24]} scale={[18, 3.5, 1]} color="#182c50" opacity={0.2} />
     </group>
   );
 }
+
+export default memo(DeepSpaceBackground);
