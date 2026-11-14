@@ -30,10 +30,11 @@ export default function useKeyboardShortcuts({
       if (isTutorialOpen) return;
       const editable = isEditable(event.target);
       if (event.key === 'Escape') {
-        if (hasSearchResults || searchOpen) {
+        if (isShortcutGuideOpen) onCloseShortcutGuide();
+        else if (hasSearchResults || searchOpen) {
           onClearSearch();
           onDismissSearch();
-        } else if (isShortcutGuideOpen) onCloseShortcutGuide();
+        }
         else if (isAudioOpen) onCloseAudio();
         else if (isInspectorOpen) onCloseInspector();
         else onCloseSelection();

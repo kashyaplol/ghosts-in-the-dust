@@ -16,7 +16,7 @@ export default function Header({
   const missionCount = equipment.filter((item) => item.body === activeBody).length;
 
   return (
-    <header className="pointer-events-auto z-50 flex w-full flex-wrap items-center justify-between gap-4 border-b border-white/10 bg-[#08090c]/80 px-6 py-4 backdrop-blur-md">
+    <header className="pointer-events-auto z-40 flex w-full flex-wrap items-center justify-between gap-4 border-b border-white/10 bg-[#08090c]/80 px-6 py-4 backdrop-blur-md">
       <div>
         <p className="font-mono text-xs uppercase tracking-[0.3em] text-white/50">NASA // DEEP SPACE ARCHIVE</p>
         <h1 className="mt-1 text-xl font-semibold tracking-widest text-[#00f3ff]">Ghosts in the Dust</h1>

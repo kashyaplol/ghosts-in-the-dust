@@ -46,7 +46,7 @@ export default function TelemetryHUD({
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 400 }}
           transition={{ type: 'spring', stiffness: 280, damping: 30 }}
-          className="pointer-events-auto fixed right-6 top-24 z-50 max-h-[80vh] w-96 overflow-y-auto rounded-xl border border-glass-border bg-panel-dark/85 p-6 shadow-2xl backdrop-blur-md"
+          className="pointer-events-auto fixed right-6 top-24 z-30 max-h-[80vh] w-96 overflow-y-auto rounded-xl border border-glass-border bg-panel-dark/85 p-6 shadow-2xl backdrop-blur-md"
           aria-label={`${selectedEquipment.name} telemetry`}
         >
           <div className="flex items-start justify-between gap-4">
