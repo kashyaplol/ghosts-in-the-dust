@@ -1,9 +1,9 @@
-import { Search } from 'lucide-react';
+import { HelpCircle, Search } from 'lucide-react';
 import { useState } from 'react';
 import equipment from '@/data/equipment.json';
 import { useSpaceContext } from '@/context/SpaceContext';
 
-export default function Header() {
+export default function Header({ onReplayTutorial }) {
   const { activeBody, switchBody, selectEquipment } = useSpaceContext();
   const [query, setQuery] = useState('');
   const matches = equipment.filter((item) => (
@@ -24,7 +24,7 @@ export default function Header() {
       </div>
 
       <div className="flex items-center gap-6">
-        <div className="flex items-center rounded-full border border-white/10 bg-[#12141d]/85 p-1 font-mono text-xs uppercase tracking-wider">
+        <div data-tutorial="planet-selector" className="flex items-center rounded-full border border-white/10 bg-[#12141d]/85 p-1 font-mono text-xs uppercase tracking-wider">
           {['Moon', 'Mars'].map((body) => {
             const isActive = body === activeBody;
 
@@ -91,6 +91,15 @@ export default function Header() {
         <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
           {missionCount} {missionCount === 1 ? 'MISSION' : 'MISSIONS'} TRACKED
         </span>
+        <button
+          type="button"
+          onClick={onReplayTutorial}
+          className="flex items-center gap-1 rounded border border-white/10 px-2 py-2 font-mono text-[10px] text-white/60 hover:border-[#00f3ff]/50 hover:text-[#00f3ff] focus:outline-none focus:ring-2 focus:ring-[#00f3ff]/70"
+          aria-label="Replay tutorial"
+          data-tutorial="help"
+        >
+          <HelpCircle size={14} /> HELP
+        </button>
       </div>
     </header>
   );

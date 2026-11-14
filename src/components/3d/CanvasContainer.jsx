@@ -33,6 +33,7 @@ export default function CanvasContainer({
 
   return (
     <Canvas
+      data-tutorial="canvas"
       className="pointer-events-auto"
       style={{ touchAction: 'none' }}
       camera={{ position: [0, 0, 5], fov: 45, near: 0.1, far: 100 }}

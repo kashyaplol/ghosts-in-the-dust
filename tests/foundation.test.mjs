@@ -11,6 +11,12 @@ import {
   dotProduct,
 } from '../src/utils/planetLighting.js';
 import { getHardwareImage, hasHardwareImage } from '../src/utils/hardwareImages.js';
+import {
+  ONBOARDING_STORAGE_KEY,
+  ONBOARDING_VERSION,
+  readOnboardingState,
+  writeOnboardingState,
+} from '../src/utils/onboarding.js';
 
 test('converts Apollo 11 coordinates using the documented convention', () => {
   const actual = latLongToVector3(0.67408, 23.47297, 2.05);
@@ -98,4 +104,20 @@ test('clamps transcript progress and reaches completion', () => {
   assert.equal(getTranscriptProgress(50, 100), 0.5);
   assert.equal(getTranscriptProgress(100, 100), 1);
   assert.equal(getTranscriptProgress(200, 100), 1);
+});
+
+test('versions onboarding persistence and ignores stale state', () => {
+  const values = new Map();
+  const storage = {
+    getItem: (key) => values.get(key) || null,
+    setItem: (key, value) => values.set(key, value),
+  };
+  assert.equal(readOnboardingState(storage), null);
+  writeOnboardingState(storage, 'completed');
+  assert.deepEqual(readOnboardingState(storage), {
+    version: ONBOARDING_VERSION,
+    status: 'completed',
+  });
+  values.set(ONBOARDING_STORAGE_KEY, JSON.stringify({ version: 'old', status: 'completed' }));
+  assert.equal(readOnboardingState(storage), null);
 });

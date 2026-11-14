@@ -4,6 +4,8 @@ import AudioPlayer from '@/components/ui/AudioPlayer';
 import Header from '@/components/ui/Header';
 import HardwareInspector from '@/components/ui/HardwareInspector';
 import TelemetryHUD from '@/components/ui/TelemetryHUD';
+import TutorialOverlay from '@/components/ui/TutorialOverlay';
+import useOnboarding from '@/hooks/useOnboarding';
 import { useSpaceContext } from '@/context/SpaceContext';
 
 export default function App() {
@@ -23,6 +25,7 @@ export default function App() {
     closeAudio,
   } = useSpaceContext();
   const [textureStatus, setTextureStatus] = useState('loading');
+  const { isOpen: isTutorialOpen, finish, replay } = useOnboarding();
 
   useEffect(() => {
     setTextureStatus('loading');
@@ -44,7 +47,7 @@ export default function App() {
             : `${activeBody} procedural surface fallback — NASA texture unavailable`}
       </div>
       <div className="pointer-events-none fixed inset-0 z-10 flex flex-col">
-        <Header />
+        <Header onReplayTutorial={replay} />
         <TelemetryHUD
           selectedEquipment={selectedEquipment}
           onClose={clearSelection}
@@ -67,6 +70,7 @@ export default function App() {
           onClose={closeAudio}
         />
       )}
+      <TutorialOverlay open={isTutorialOpen} onFinish={finish} />
     </main>
   );
 }

@@ -40,6 +40,7 @@ export default function TelemetryHUD({
     <AnimatePresence>
       {selectedEquipment && (
         <motion.section
+          data-tutorial="telemetry"
           key={selectedEquipment.id}
           initial={{ opacity: 0, x: 400 }}
           animate={{ opacity: 1, x: 0 }}
@@ -166,6 +167,7 @@ export default function TelemetryHUD({
 
           <div className="mt-6 grid gap-3">
             <button
+              data-tutorial="inspect-button"
               type="button"
               onClick={onOpenInspector}
               className="rounded border border-[#00f3ff]/40 px-4 py-3 font-mono text-xs font-bold tracking-wider text-[#00f3ff] transition-colors hover:bg-[#00f3ff]/10 focus:outline-none focus:ring-2 focus:ring-[#00f3ff]/70"
@@ -173,6 +175,7 @@ export default function TelemetryHUD({
               INSPECT 3D HARDWARE
             </button>
             <button
+              data-tutorial="transmission-button"
               type="button"
               onClick={onPlayAudio}
               className="flex items-center justify-center gap-2 rounded border border-[#ffb703]/40 px-4 py-3 font-mono text-xs font-bold tracking-wider text-[#ffb703] transition-colors hover:bg-[#ffb703]/10 focus:outline-none focus:ring-2 focus:ring-[#ffb703]/70"
