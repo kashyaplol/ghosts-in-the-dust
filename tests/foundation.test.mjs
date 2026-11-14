@@ -127,6 +127,14 @@ test('versions onboarding persistence and ignores stale state', () => {
       assert.match(source, new RegExp(`key: '${key}'`));
     }
   });
+
+  test('keeps planetary surfaces opaque during texture transitions', async () => {
+    const source = await readSource(new URL('../src/components/3d/PlanetSurface.jsx', import.meta.url), 'utf8');
+    assert.match(source, /transparent=\{false\}/);
+    assert.match(source, /opacity=\{1\}/);
+    assert.match(source, /depthWrite/);
+    assert.doesNotMatch(source, /transparent\s*(\r?\n\s*)?opacity=\{0\}/);
+  });
   values.set(ONBOARDING_STORAGE_KEY, JSON.stringify({ version: 'old', status: 'completed' }));
   assert.equal(readOnboardingState(storage), null);
 });

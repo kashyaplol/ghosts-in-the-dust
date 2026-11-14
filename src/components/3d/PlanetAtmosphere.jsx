@@ -25,13 +25,14 @@ const fragmentShader = `
 export default function PlanetAtmosphere({ body }) {
   if (body === 'Moon') return null;
   return (
-    <mesh scale={1.025} raycast={() => null}>
+    <mesh scale={1.025} renderOrder={1} raycast={() => null}>
       <sphereGeometry args={[2, 64, 64]} />
       <shaderMaterial
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}
         uniforms={{ atmosphereColor: { value: [0.72, 0.25, 0.08] } }}
         transparent
+        depthTest
         depthWrite={false}
         side={BackSide}
         blending={AdditiveBlending}
