@@ -1,4 +1,4 @@
-import { Compass, HelpCircle, Keyboard } from 'lucide-react';
+import { Clock3, Compass, HelpCircle, Keyboard } from 'lucide-react';
 import equipment from '@/data/equipment.json';
 import { useSpaceContext } from '@/context/SpaceContext';
 import MissionSearch from '@/components/ui/MissionSearch';
@@ -12,6 +12,7 @@ export default function Header({
   onDismissSearch,
   onSelectMission,
   onStartGuidedExploration,
+  onToggleTimeline,
 }) {
   const { activeBody, switchBody } = useSpaceContext();
   const missionCount = equipment.filter((item) => item.body === activeBody).length;
@@ -49,6 +50,14 @@ export default function Header({
           className="flex items-center gap-1 rounded border border-[#ffb703]/40 px-2 py-2 font-mono text-[10px] text-[#ffb703] transition-colors hover:bg-[#ffb703]/10 focus:outline-none focus:ring-2 focus:ring-[#ffb703]/70"
         >
           <Compass size={14} /> <span className="hidden xl:inline">GUIDED EXPLORATION</span><span className="xl:hidden">GUIDED</span>
+        </button>
+        <button
+          type="button"
+          onClick={onToggleTimeline}
+          aria-label="Show historical mission timeline"
+          className="flex items-center gap-1 rounded border border-white/10 px-2 py-2 font-mono text-[10px] text-white/60 transition-colors hover:border-[#00f3ff]/50 hover:text-[#00f3ff] focus:outline-none focus:ring-2 focus:ring-[#00f3ff]/70"
+        >
+          <Clock3 size={14} /> <span className="hidden xl:inline">TIMELINE</span>
         </button>
         <div className="hidden items-center gap-2 font-mono text-xs text-[#00f3ff] sm:flex">
           <span className="h-2 w-2 animate-pulse rounded-full bg-[#00f3ff]" aria-hidden="true" />
