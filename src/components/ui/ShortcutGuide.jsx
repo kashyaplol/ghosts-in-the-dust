@@ -1,4 +1,4 @@
-import { Keyboard, X } from 'lucide-react';
+import { Button, PanelHeader } from '@/components/ui/primitives';
 
 const shortcuts = [
   ['/', 'Focus mission search', 'Global, outside text fields'],
@@ -12,19 +12,36 @@ const shortcuts = [
 
 export default function ShortcutGuide({ onClose }) {
   return (
-    <aside className="pointer-events-auto fixed right-5 top-24 z-[60] w-[min(92vw,360px)] rounded-xl border border-glass-border bg-panel-dark/95 p-5 shadow-2xl backdrop-blur-md" role="dialog" aria-label="Keyboard shortcuts">
-      <div className="flex items-center justify-between">
-        <h2 className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-[#00f3ff]"><Keyboard size={15} /> Keyboard shortcuts</h2>
-        <button type="button" onClick={onClose} aria-label="Close keyboard shortcuts" className="rounded p-1 text-white/50 hover:bg-white/10 hover:text-white"><X size={16} /></button>
-      </div>
-      <dl className="mt-4 space-y-3">
+    <aside
+      className="instrument-panel pointer-events-auto fixed right-4 top-28 z-[60] w-[calc(100vw-2rem)] rounded-lg p-5 sm:right-6 lg:top-20 sm:w-[360px]"
+      role="dialog"
+      aria-label="Keyboard shortcuts"
+    >
+      <PanelHeader
+        eyebrow="Navigation"
+        eyebrowClass="text-ice-accent"
+        title="Keyboard Shortcuts"
+        onClose={onClose}
+        closeLabel="Close keyboard shortcuts"
+      />
+      <dl className="mt-4 divide-y divide-white/[0.07]">
         {shortcuts.map(([key, action, context]) => (
-          <div key={key} className="grid grid-cols-[64px_1fr] gap-3">
-            <dt className="rounded border border-white/10 px-2 py-1 text-center font-mono text-[10px] text-white/80">{key}</dt>
-            <dd><p className="text-xs text-white/80">{action}</p><p className="font-mono text-[9px] uppercase text-white/35">{context}</p></dd>
+          <div key={key} className="grid grid-cols-[64px_1fr] items-center gap-3 py-2.5">
+            <dt className="rounded border border-white/15 bg-panel-recessed px-2 py-1 text-center font-mono text-[11px] text-ink-primary">
+              {key}
+            </dt>
+            <dd>
+              <p className="text-xs font-medium text-ink-primary">{action}</p>
+              <p className="mt-0.5 text-[11px] text-ink-muted">{context}</p>
+            </dd>
           </div>
         ))}
       </dl>
+      <div className="mt-3 flex justify-end border-t border-white/[0.08] pt-3">
+        <Button variant="tertiary" size="sm" onClick={onClose}>
+          Done
+        </Button>
+      </div>
     </aside>
   );
 }

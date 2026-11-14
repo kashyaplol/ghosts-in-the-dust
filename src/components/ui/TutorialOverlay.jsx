@@ -1,16 +1,17 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowLeft, ArrowRight, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { Button, PanelHeader } from '@/components/ui/primitives';
 
 const steps = [
-  { title: 'WELCOME', body: 'Explore abandoned lunar and Martian missions, inspect their hardware, and listen to their final transmissions.', target: null },
-  { title: 'PLANETARY EXPLORATION', body: 'Use the Moon and Mars selector to move between planetary archives.', target: '[data-tutorial="planet-selector"]' },
-  { title: 'CAMERA CONTROLS', body: 'Left-click and drag to rotate. Use the scroll wheel to zoom. The camera returns to a stable orbit after each mission fly-to.', target: 'canvas' },
-  { title: 'MISSION MARKERS', body: 'Glowing markers identify historical landing sites. Click one to open its telemetry.', target: 'canvas' },
-  { title: 'TELEMETRY HUD', body: 'Review landing dates, status, technical specifications, operational lifespan, and cause-of-signal-loss analysis.', target: '[data-tutorial="telemetry"]' },
-  { title: 'HARDWARE INSPECTOR', body: 'Inspect available interactive 3D models or verified static mission images from the telemetry panel.', target: '[data-tutorial="inspect-button"]' },
-  { title: 'FINAL HOURS', body: 'Open a mission transmission to hear a synthesized historical narrative and follow its transcript progress.', target: '[data-tutorial="transmission-button"]' },
-  { title: 'COMPLETION', body: 'You are ready to explore the archive. You can reopen this guide at any time with HELP.', target: null },
+  { title: 'Planetary Archaeology Archive', body: 'Explore abandoned lunar and Martian missions, inspect their hardware, and listen to their final transmissions.', target: null },
+  { title: 'Planetary Archive Switch', body: 'Use the Moon and Mars selector in the top bar to switch between planetary archives.', target: '[data-tutorial="planet-selector"]' },
+  { title: 'Orbital Camera Controls', body: 'Drag to orbit the planet and scroll to zoom. Use the bottom instrument dock to reset, focus, or explore.', target: 'canvas' },
+  { title: 'Surface Mission Beacons', body: 'Surface beacons mark historical landing sites. Select any beacon to fly to the site and open its telemetry.', target: 'canvas' },
+  { title: 'Telemetry Dossier', body: 'Review landing dates, operational lifespan, technical specifications, and cause-of-signal-loss analysis.', target: '[data-tutorial="telemetry"]' },
+  { title: 'Hardware Inspector', body: 'Inspect interactive 3D models or verified archival mission photography directly from the telemetry dossier.', target: '[data-tutorial="inspect-button"]' },
+  { title: 'Final Hours Log', body: 'Open a mission transmission to listen to a synthesized historical narrative and read the full transcript.', target: '[data-tutorial="transmission-button"]' },
+  { title: 'Ready to Explore', body: 'You are ready to begin investigating the archive. Reopen this orientation anytime from Help.', target: null },
 ];
 
 function getTargetRect(selector) {
@@ -18,7 +19,7 @@ function getTargetRect(selector) {
   const element = document.querySelector(selector);
   if (!element) return null;
   const rect = element.getBoundingClientRect();
-  return { top: rect.top - 8, left: rect.left - 8, width: rect.width + 16, height: rect.height + 16 };
+  return { top: rect.top - 6, left: rect.left - 6, width: rect.width + 12, height: rect.height + 12 };
 }
 
 export default function TutorialOverlay({ open, onFinish }) {
@@ -26,7 +27,7 @@ export default function TutorialOverlay({ open, onFinish }) {
   const [rect, setRect] = useState(null);
   const closeRef = useRef(null);
   const current = steps[step];
-  const progress = `${step + 1}/${steps.length}`;
+  const progress = `${step + 1} of ${steps.length}`;
 
   useEffect(() => {
     if (!open) return undefined;
@@ -60,7 +61,7 @@ export default function TutorialOverlay({ open, onFinish }) {
 
   const cardPosition = useMemo(() => (
     rect
-      ? { top: Math.min(rect.top + rect.height + 20, window.innerHeight - 280) }
+      ? { top: Math.min(Math.max(rect.top + rect.height + 16, 84), window.innerHeight - 260) }
       : { top: '50%', transform: 'translate(-50%, -50%)' }
   ), [rect]);
 
@@ -68,7 +69,7 @@ export default function TutorialOverlay({ open, onFinish }) {
   return (
     <AnimatePresence>
       <motion.div
-        className="pointer-events-none fixed inset-0 z-[70] bg-[#020308]/75 p-4"
+        className="pointer-events-none fixed inset-0 z-[70] bg-space-black/70 p-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -76,33 +77,58 @@ export default function TutorialOverlay({ open, onFinish }) {
         aria-modal="true"
         aria-label="First-time exploration tutorial"
       >
-        {rect && <div className="pointer-events-none fixed rounded-xl border border-[#00f3ff] shadow-[0_0_0_9999px_rgba(2,3,8,0.72),0_0_24px_rgba(0,243,255,0.5)]" style={rect} />}
+        {rect && (
+          <div
+            className="pointer-events-none fixed rounded-md border border-ice-accent/75 shadow-[0_0_0_9999px_rgba(7,8,11,0.72)]"
+            style={rect}
+          />
+        )}
         <motion.section
-          className="pointer-events-auto absolute left-1/2 w-[min(92vw,460px)] -translate-x-1/2 rounded-xl border border-[#00f3ff]/30 bg-[#12141d]/95 p-6 shadow-2xl backdrop-blur-md"
+          className="instrument-panel pointer-events-auto absolute left-1/2 w-[min(92vw,440px)] -translate-x-1/2 rounded-lg p-6"
           style={cardPosition}
-          initial={{ y: 12, opacity: 0 }}
+          initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
           key={step}
         >
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="font-mono text-[10px] tracking-[0.3em] text-[#00f3ff]">ARCHIVE ORIENTATION // {progress}</p>
-              <h2 className="mt-3 text-xl font-semibold tracking-widest text-white">{current.title}</h2>
-            </div>
-            <button ref={closeRef} type="button" onClick={() => onFinish('skipped')} className="rounded p-2 text-white/50 hover:bg-white/10 hover:text-white" aria-label="Skip tutorial">
-              <X size={18} />
-            </button>
+          <PanelHeader
+            eyebrow={`Archive Orientation · ${progress}`}
+            eyebrowClass="text-ice-accent"
+            title={current.title}
+            onClose={() => onFinish('skipped')}
+            closeLabel="Skip tutorial"
+            closeRef={closeRef}
+          />
+          <p className="mt-3 text-sm leading-relaxed text-ink-secondary">{current.body}</p>
+
+          <div className="mt-5 flex gap-1" aria-hidden="true">
+            {steps.map((item, idx) => (
+              <span
+                key={item.title}
+                className={`h-0.5 flex-1 rounded-full ${idx <= step ? 'bg-ice-accent' : 'bg-white/12'}`}
+              />
+            ))}
           </div>
-          <p className="mt-4 text-sm leading-6 text-white/70">{current.body}</p>
-          <div className="mt-6 flex items-center justify-between gap-3">
-            <button type="button" onClick={() => onFinish('skipped')} className="font-mono text-xs uppercase tracking-wider text-white/50 hover:text-white">
+
+          <div className="mt-5 flex items-center justify-between gap-3">
+            <Button variant="tertiary" size="sm" onClick={() => onFinish('skipped')}>
               Skip
-            </button>
-            <div className="flex gap-2">
-              {step > 0 && <button type="button" onClick={() => setStep((value) => value - 1)} className="flex items-center gap-1 rounded border border-white/10 px-3 py-2 font-mono text-xs text-white/70 hover:border-white/30"><ArrowLeft size={14} /> PREVIOUS</button>}
-              <button type="button" onClick={() => (step === steps.length - 1 ? onFinish('completed') : setStep((value) => value + 1))} className="flex items-center gap-1 rounded bg-[#00f3ff] px-4 py-2 font-mono text-xs font-bold text-[#08090c] hover:bg-white">
-                {step === 0 ? 'START EXPLORATION' : step === steps.length - 1 ? 'EXPLORE NOW' : 'NEXT'} <ArrowRight size={14} />
-              </button>
+            </Button>
+            <div className="flex items-center gap-2">
+              {step > 0 && (
+                <Button variant="secondary" size="sm" onClick={() => setStep((value) => value - 1)}>
+                  <ArrowLeft size={13} aria-hidden="true" />
+                  Previous
+                </Button>
+              )}
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => (step === steps.length - 1 ? onFinish('completed') : setStep((value) => value + 1))}
+              >
+                {step === 0 ? 'Start Exploration' : step === steps.length - 1 ? 'Enter Archive' : 'Next'}
+                <ArrowRight size={13} aria-hidden="true" />
+              </Button>
             </div>
           </div>
         </motion.section>

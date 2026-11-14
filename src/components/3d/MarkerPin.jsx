@@ -5,11 +5,12 @@ function MarkerPin({ mission, selected, onSelect }) {
   const markerRef = useRef();
   const [hovered, setHovered] = useState(false);
   const position = mission.position;
+  const color = selected ? '#67c5d9' : mission.body === 'Mars' ? '#df8862' : '#d49a45';
 
   useFrame(({ clock }) => {
     if (!markerRef.current) return;
-    const pulse = 1 + Math.sin(clock.elapsedTime * 4) * 0.12;
-    const scale = (selected ? 1.35 : hovered ? 1.2 : 1) * pulse;
+    const pulse = 1 + Math.sin(clock.elapsedTime * 3) * 0.08;
+    const scale = (selected ? 1.25 : hovered ? 1.15 : 0.95) * pulse;
     markerRef.current.scale.setScalar(scale);
   });
 
@@ -32,11 +33,11 @@ function MarkerPin({ mission, selected, onSelect }) {
         document.body.style.cursor = 'default';
       }}
     >
-      <sphereGeometry args={[0.04, 16, 16]} />
+      <sphereGeometry args={[0.036, 16, 16]} />
       <meshStandardMaterial
-        color={selected ? '#00f3ff' : '#ffb703'}
-        emissive={selected ? '#00f3ff' : '#ffb703'}
-        emissiveIntensity={selected ? 3 : hovered ? 2 : 1.2}
+        color={color}
+        emissive={color}
+        emissiveIntensity={selected ? 1.8 : hovered ? 1.4 : 0.9}
         toneMapped={false}
       />
     </mesh>

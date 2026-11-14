@@ -1,34 +1,11 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { Radio, X } from 'lucide-react';
-
-const statusColors = {
-  'Lost Contact': '#ff4d4d',
-  Decommissioned: '#ffb703',
-  Preserved: '#00f3ff',
-  Active: '#00f3ff',
-  Operational: '#00f3ff',
-  'Mission Complete': '#00f3ff',
-};
-
-function getStatusColor(status) {
-  return statusColors[status] || '#ffb703';
-}
-
-function getStatusHeading(status) {
-  if (status === 'Lost Contact') return 'Cause of Signal Loss';
-  if (status === 'Decommissioned') return 'Decommissioning Details';
-  if (status === 'Mission Complete') return 'Mission Completion';
-  return 'Current Mission Status';
-}
-
-function getOperationalLifespan(landedDate, lastSignalDate) {
-  const start = new Date(`${landedDate}T00:00:00Z`);
-  const end = new Date(`${lastSignalDate}T00:00:00Z`);
-  const elapsedDays = Math.max(0, Math.round((end - start) / 86400000));
-  const years = Math.floor(elapsedDays / 365.25);
-  const days = Math.round(elapsedDays - years * 365.25);
-  return years ? `${years}y ${days}d` : `${elapsedDays}d`;
-}
+import { Box, Radio } from 'lucide-react';
+import { BodyTag, Button, PanelHeader, StatusIndicator } from '@/components/ui/primitives';
+import {
+  formatCoordinates,
+  getOperationalLifespan,
+  getStatusMeta,
+} from '@/utils/missionTheme';
 
 export default function TelemetryHUD({
   selectedEquipment,
@@ -36,153 +13,125 @@ export default function TelemetryHUD({
   onOpenInspector,
   onPlayAudio,
 }) {
+  const statusMeta = selectedEquipment ? getStatusMeta(selectedEquipment.status) : null;
+
   return (
     <AnimatePresence mode="wait">
       {selectedEquipment && (
         <motion.section
           data-tutorial="telemetry"
           key={selectedEquipment.id}
-          initial={{ opacity: 0, x: 400 }}
+          initial={{ opacity: 0, x: 24 }}
           animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: 400 }}
-          transition={{ type: 'spring', stiffness: 280, damping: 30 }}
-          className="pointer-events-auto fixed right-6 top-24 z-30 max-h-[80vh] w-96 overflow-y-auto rounded-xl border border-glass-border bg-panel-dark/85 p-6 shadow-2xl backdrop-blur-md"
+          exit={{ opacity: 0, x: 24 }}
+          transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+          className="instrument-panel pointer-events-auto fixed right-4 top-28 z-30 flex max-h-[calc(100vh-12rem)] w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-lg sm:right-6 lg:top-20 lg:max-h-[calc(100vh-7rem)] sm:w-[376px]"
           aria-label={`${selectedEquipment.name} telemetry`}
         >
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/50">
-                Mission Telemetry
-              </span>
-              <h2 className="mt-2 text-xl font-semibold leading-tight text-white">
-                {selectedEquipment.name}
-              </h2>
-              <span className="mt-3 inline-flex rounded border border-[#00f3ff]/30 px-2 py-1 font-mono text-[10px] font-bold tracking-[0.2em] text-[#00f3ff]">
-                {selectedEquipment.body.toUpperCase()}
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-md p-1 text-white/50 transition-colors hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-[#00f3ff]/70"
-              aria-label="Close mission telemetry"
+          <div className="shrink-0 border-b border-white/10 px-5 pb-4 pt-5">
+            <PanelHeader
+              eyebrow="Mission Telemetry"
+              eyebrowClass="text-ink-muted"
+              title={selectedEquipment.name}
+              onClose={onClose}
+              closeLabel="Close mission telemetry"
             >
-              <X size={20} />
-            </button>
+              <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-ink-secondary">
+                <BodyTag body={selectedEquipment.body} />
+                <span aria-hidden="true" className="text-ink-muted">·</span>
+                <span className="font-mono text-[11px] tabular-data text-ink-muted">
+                  {formatCoordinates(selectedEquipment.latitude, selectedEquipment.longitude)}
+                </span>
+              </div>
+            </PanelHeader>
+
+            <div className="mt-4 flex items-center justify-between border-t border-white/[0.07] pt-3">
+              <span className="text-xs text-ink-muted">Status</span>
+              <StatusIndicator status={selectedEquipment.status} />
+            </div>
           </div>
 
-          <div className="mt-6 flex items-center justify-between border-y border-white/10 py-3">
-            <span className="font-mono text-xs uppercase tracking-wider text-white/50">
-              Status
-            </span>
-            <span
-              className="rounded-full border px-3 py-1 font-mono text-xs uppercase tracking-wider"
-              style={{
-                borderColor: `${getStatusColor(selectedEquipment.status)}66`,
-                color: getStatusColor(selectedEquipment.status),
-              }}
-            >
-              {selectedEquipment.status}
-            </span>
-          </div>
-
-          <dl className="mt-5 grid grid-cols-2 gap-4">
-            <div>
-              <dt className="font-mono text-[10px] uppercase tracking-wider text-white/40">
-                Landed Date
-              </dt>
-              <dd className="mt-1 font-mono text-sm text-white">
-                {selectedEquipment.landedDate}
-              </dd>
-            </div>
-            <div>
-              <dt className="font-mono text-[10px] uppercase tracking-wider text-white/40">
-                Last Signal
-              </dt>
-              <dd className="mt-1 font-mono text-sm text-white">
-                {selectedEquipment.lastSignalDate}
-              </dd>
-            </div>
-            <div>
-              <dt className="font-mono text-[10px] uppercase tracking-wider text-white/40">
-                Operational Lifespan
-              </dt>
-              <dd className="mt-1 font-mono text-sm text-white">
-                {getOperationalLifespan(
-                  selectedEquipment.landedDate,
-                  selectedEquipment.lastSignalDate,
-                )}
-              </dd>
-            </div>
-          </dl>
-
-          <div
-            className="mt-6 rounded-lg border p-4"
-            style={{
-              borderColor: `${getStatusColor(selectedEquipment.status)}55`,
-              backgroundColor: `${getStatusColor(selectedEquipment.status)}0d`,
-            }}
-          >
-            <h3
-              className="font-mono text-xs uppercase tracking-wider"
-              style={{ color: getStatusColor(selectedEquipment.status) }}
-            >
-              {getStatusHeading(selectedEquipment.status)}
-            </h3>
-            <p className="mt-2 text-sm leading-relaxed text-white/75">
-              {selectedEquipment.causeOfDeath}
-            </p>
-          </div>
-
-          <div className="mt-6">
-            <h3 className="font-mono text-xs uppercase tracking-wider text-white/50">
-              Technical Specifications
-            </h3>
-            <dl className="mt-3 grid grid-cols-2 gap-3">
-              {[
-                ['Mass', selectedEquipment.technicalSpecs.mass],
-                ['Power Source', selectedEquipment.technicalSpecs.powerSource],
-                ['Total Distance', selectedEquipment.technicalSpecs.totalDistance],
-              ].map(([label, value]) => (
-                <div key={label} className="rounded border border-white/10 p-3">
-                  <dt className="font-mono text-[10px] uppercase text-white/40">
-                    {label}
-                  </dt>
-                  <dd className="mt-1 text-xs leading-relaxed text-white/80">
-                    {value}
-                  </dd>
-                </div>
-              ))}
+          <div className="archive-scroll min-h-0 flex-1 space-y-5 overflow-y-auto px-5 py-4">
+            <dl className="grid grid-cols-3 gap-3 border-b border-white/[0.07] pb-4">
+              <div>
+                <dt className="text-[11px] text-ink-muted">Landed</dt>
+                <dd className="mt-1 font-mono text-xs tabular-data text-ink-primary">
+                  {selectedEquipment.landedDate}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-[11px] text-ink-muted">Last signal</dt>
+                <dd className="mt-1 font-mono text-xs tabular-data text-ink-primary">
+                  {selectedEquipment.lastSignalDate}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-[11px] text-ink-muted">Lifespan</dt>
+                <dd className="mt-1 font-mono text-xs tabular-data text-ink-primary">
+                  {getOperationalLifespan(
+                    selectedEquipment.landedDate,
+                    selectedEquipment.lastSignalDate,
+                  )}
+                </dd>
+              </div>
             </dl>
+
+            <div>
+              <h3 className={`text-xs font-medium ${statusMeta.textClass}`}>
+                {statusMeta.heading}
+              </h3>
+              <p className="mt-1.5 text-sm leading-relaxed text-ink-secondary">
+                {selectedEquipment.causeOfDeath}
+              </p>
+            </div>
+
+            <div className="border-t border-white/[0.07] pt-4">
+              <h3 className="text-xs font-medium text-ink-primary">Technical Specifications</h3>
+              <dl className="mt-2.5 divide-y divide-white/[0.06]">
+                {[
+                  ['Dry mass', selectedEquipment.technicalSpecs.mass],
+                  ['Power', selectedEquipment.technicalSpecs.powerSource],
+                  ['Traverse', selectedEquipment.technicalSpecs.totalDistance],
+                ].map(([label, value]) => (
+                  <div key={label} className="flex items-baseline justify-between gap-4 py-2">
+                    <dt className="shrink-0 text-xs text-ink-muted">{label}</dt>
+                    <dd className="text-right font-mono text-xs tabular-data text-ink-primary">
+                      {value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+
+            <div className="border-t border-white/[0.07] pt-4">
+              <h3 className="text-xs font-medium text-ink-primary">Primary Mission</h3>
+              <p className="mt-1.5 text-sm leading-relaxed text-ink-secondary">
+                {selectedEquipment.primaryMission}
+              </p>
+            </div>
           </div>
 
-          <div className="mt-6">
-            <h3 className="font-mono text-xs uppercase tracking-wider text-white/50">
-              Primary Mission
-            </h3>
-            <p className="mt-2 text-sm leading-relaxed text-white/75">
-              {selectedEquipment.primaryMission}
-            </p>
-          </div>
-
-          <div className="mt-6 grid gap-3">
-            <button
+          <div className="grid shrink-0 grid-cols-2 gap-2.5 border-t border-white/10 bg-panel-recessed/70 px-5 py-3.5">
+            <Button
               data-tutorial="inspect-button"
-              type="button"
+              variant="primary"
+              size="md"
               onClick={onOpenInspector}
-              className="rounded border border-[#00f3ff]/40 px-4 py-3 font-mono text-xs font-bold tracking-wider text-[#00f3ff] transition-colors hover:bg-[#00f3ff]/10 focus:outline-none focus:ring-2 focus:ring-[#00f3ff]/70"
+              className="w-full"
             >
-              INSPECT 3D HARDWARE
-            </button>
-            <button
+              <Box size={14} aria-hidden="true" />
+              Inspect Hardware
+            </Button>
+            <Button
               data-tutorial="transmission-button"
-              type="button"
+              variant="secondary"
+              size="md"
               onClick={onPlayAudio}
-              className="flex items-center justify-center gap-2 rounded border border-[#ffb703]/40 px-4 py-3 font-mono text-xs font-bold tracking-wider text-[#ffb703] transition-colors hover:bg-[#ffb703]/10 focus:outline-none focus:ring-2 focus:ring-[#ffb703]/70"
+              className="w-full"
             >
-              <Radio size={15} />
-              TRANSMISSION LOG
-            </button>
+              <Radio size={14} aria-hidden="true" className="text-solar-amber" />
+              Final Hours
+            </Button>
           </div>
         </motion.section>
       )}

@@ -1,18 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
-import { ChevronDown, ChevronUp, Pause, Play, X } from 'lucide-react';
-import {
-  getTranscriptProgress,
-  isSpeechSynthesisSupported,
-} from '@/utils/audio';
+import { ChevronDown, ChevronUp, Pause, Play } from 'lucide-react';
+import { getTranscriptProgress, isSpeechSynthesisSupported } from '@/utils/audio';
+import { Button, PanelHeader } from '@/components/ui/primitives';
 
 const statusLabels = {
-  ready: 'READY TO TRANSMIT',
-  playing: 'TRANSMITTING',
-  stopped: 'TRANSMISSION STOPPED',
-  complete: 'TRANSMISSION COMPLETE',
-  unavailable: 'SPEECH UNAVAILABLE',
-  error: 'PLAYBACK ERROR',
-  empty: 'NO TRANSCRIPT',
+  ready: 'Ready to transmit',
+  playing: 'Transmitting narrative',
+  stopped: 'Transmission paused',
+  complete: 'Transmission complete',
+  unavailable: 'Speech unavailable',
+  error: 'Playback error',
+  empty: 'No transcript',
 };
 
 export default function AudioPlayer({ equipment, isPlaying, onPlay, onStop, onClose }) {
@@ -55,9 +53,7 @@ export default function AudioPlayer({ equipment, isPlaying, onPlay, onStop, onCl
   }, [equipment?.id]);
 
   useEffect(() => {
-    if (!isPlaying || !equipment) {
-      return undefined;
-    }
+    if (!isPlaying || !equipment) return undefined;
     const transcript = equipment.narrativeTranscript?.trim() || '';
     if (!supported) {
       setStatus('unavailable');
@@ -120,53 +116,55 @@ export default function AudioPlayer({ equipment, isPlaying, onPlay, onStop, onCl
 
   return (
     <section
-      className="pointer-events-auto fixed bottom-6 left-1/2 z-[35] max-h-[70vh] w-[min(92vw,520px)] -translate-x-1/2 overflow-y-auto rounded-xl border border-[#00f3ff]/30 bg-[#12141d]/95 p-5 shadow-2xl backdrop-blur-md lg:left-6 lg:translate-x-0"
+      className="instrument-panel archive-scroll pointer-events-auto fixed bottom-16 left-4 z-[35] max-h-[calc(100vh-12rem)] w-[calc(100vw-2rem)] overflow-y-auto rounded-lg p-5 sm:left-6 lg:bottom-6 lg:max-h-[70vh] sm:w-[410px]"
       role="dialog"
       aria-modal="false"
       aria-label={`${equipment.name} Final Hours transmission`}
     >
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#00f3ff]">Final Hours // Transmission Log</p>
-          <h2 className="mt-1 text-lg text-white">{equipment.name}</h2>
-        </div>
-        <button type="button" onClick={onClose} className="rounded p-1 text-white/50 hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-[#00f3ff]/70" aria-label="Close transmission log">
-          <X size={18} />
-        </button>
-      </div>
+      <PanelHeader
+        eyebrow="Final Hours · Archive Transcript"
+        eyebrowClass="text-solar-amber"
+        title={equipment.name}
+        onClose={onClose}
+        closeLabel="Close transmission log"
+      />
       <div className="mt-4 flex items-center justify-between gap-3 border-y border-white/10 py-2">
-        <p className="font-mono text-[10px] uppercase tracking-wider text-[#ffb703]" role="status" aria-live="polite">{statusText}</p>
+        <p className="font-mono text-[11px] text-solar-amber" role="status" aria-live="polite">{statusText}</p>
         {hasTranscript && (
-          <button type="button" onClick={() => setExpanded((value) => !value)} aria-expanded={expanded} className="flex items-center gap-1 rounded px-2 py-1 font-mono text-[10px] text-white/55 hover:bg-white/10 hover:text-white">
-            {expanded ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
-            {expanded ? 'COLLAPSE' : 'EXPAND'} TRANSCRIPT
-          </button>
+          <Button variant="tertiary" size="sm" onClick={() => setExpanded((value) => !value)} aria-expanded={expanded} className="!h-7 !px-2 text-[11px]">
+            {expanded ? <ChevronUp size={13} aria-hidden="true" /> : <ChevronDown size={13} aria-hidden="true" />}
+            {expanded ? 'COLLAPSE' : 'EXPAND'}
+          </Button>
         )}
       </div>
-      {notice && <p className="mt-3 text-xs leading-relaxed text-[#ffb703]" role="status">{notice}</p>}
-      {error && <p className="mt-3 text-xs leading-relaxed text-[#ff4d4d]" role="alert">{error}</p>}
+      {notice && <p className="mt-3 text-xs leading-relaxed text-solar-amber" role="status">{notice}</p>}
+      {error && <p className="mt-3 text-xs leading-relaxed text-alert-red" role="alert">{error}</p>}
       {hasTranscript ? (
-        <div className={`mt-4 overflow-y-auto rounded border border-white/10 bg-black/10 p-4 ${expanded ? 'max-h-[36vh]' : 'max-h-24'}`}>
-          <p className="whitespace-pre-line text-sm leading-7 text-white/85">{transcript}</p>
+        <div className={`archive-scroll mt-4 overflow-y-auto border-l border-white/15 pl-3.5 ${expanded ? 'max-h-[34vh]' : 'max-h-20'}`}>
+          <p className="whitespace-pre-line font-display text-[15px] italic leading-7 text-ink-primary/90">
+            &ldquo;{transcript}&rdquo;
+          </p>
         </div>
       ) : (
-        <p className="mt-4 rounded border border-white/10 p-4 text-sm leading-relaxed text-white/60">No transmission transcript is available for this mission.</p>
+        <p className="mt-4 text-sm leading-relaxed text-ink-muted">No transmission transcript is available for this mission.</p>
       )}
       {hasTranscript && (
-        <>
-          <div className="mt-4 flex h-6 items-end gap-1" aria-hidden="true">
-            {[3, 8, 14, 6, 18, 10, 22, 7, 15, 5].map((height, index) => (
-              <span key={index} className={`w-1 rounded-sm ${isPlaying ? 'animate-pulse bg-[#00f3ff]' : 'bg-white/20'}`} style={{ height: `${height}px`, animationDelay: `${index * 70}ms` }} />
-            ))}
+        <div className="mt-4 border-t border-white/10 pt-4">
+          <div className="flex items-center justify-between gap-3">
+            <Button variant={isPlaying ? 'danger' : 'primary'} size="sm" onClick={isPlaying ? onStop : onPlay}>
+              {isPlaying ? <Pause size={13} aria-hidden="true" /> : <Play size={13} aria-hidden="true" />}
+              {isPlaying ? 'Stop Transmission' : 'Play Transmission'}
+            </Button>
+            <div className="flex items-end gap-1" aria-hidden="true">
+              {[4, 10, 16, 7, 19, 12, 17, 8, 13, 5].map((height, index) => (
+                <span key={index} className={`w-1 rounded-sm transition-colors duration-200 ${isPlaying ? 'bg-ice-accent' : 'bg-white/15'}`} style={{ height: `${height}px` }} />
+              ))}
+            </div>
           </div>
-          <div className="mt-3 h-1 rounded bg-white/10" aria-label={`Transmission progress ${Math.round(progress * 100)} percent`}>
-            <div className="h-1 rounded bg-[#00f3ff]" style={{ width: `${progress * 100}%` }} />
+          <div className="mt-3 h-1 overflow-hidden rounded-sm bg-white/10" aria-label={`Transmission progress ${Math.round(progress * 100)} percent`}>
+            <div className="h-full bg-ice-accent transition-[width] duration-200" style={{ width: `${progress * 100}%` }} />
           </div>
-          <button type="button" onClick={isPlaying ? onStop : onPlay} className="mt-4 flex items-center gap-2 rounded border border-[#00f3ff]/40 px-4 py-2 font-mono text-xs text-[#00f3ff] hover:bg-[#00f3ff]/10 focus:outline-none focus:ring-2 focus:ring-[#00f3ff]/70">
-            {isPlaying ? <Pause size={14} /> : <Play size={14} />}
-            {isPlaying ? 'STOP TRANSMISSION' : 'PLAY TRANSMISSION'}
-          </button>
-        </>
+        </div>
       )}
     </section>
   );

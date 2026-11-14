@@ -1,29 +1,31 @@
-import { ArrowLeftRight, X } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import equipment from '@/data/equipment.json';
+import { BodyTag, Button, PanelHeader } from '@/components/ui/primitives';
 import { getComparisonRows } from '@/utils/missionComparison';
 
 function MissionColumn({ label, mission, selectedId, onChange, onOpen }) {
   return (
-    <div className="min-w-0 rounded-lg border border-white/10 bg-white/[0.03] p-3">
-      <label className="block font-mono text-[9px] uppercase tracking-wider text-white/45">
+    <div className="min-w-0 rounded-md border border-white/10 bg-panel-recessed/80 p-3.5">
+      <label className="block text-[11px] font-medium text-ink-muted">
         {label}
         <select
           value={selectedId}
           onChange={onChange}
           aria-label={`${label} mission`}
-          className="mt-2 w-full rounded border border-white/15 bg-[#08090c] px-2 py-2 text-xs text-white outline-none focus:border-[#00f3ff]/70"
+          className="mt-2 h-9 w-full rounded-md border border-white/12 bg-panel-dark px-2.5 text-xs font-medium text-ink-primary outline-none transition-colors focus:border-ice-accent/70"
         >
-          {equipment.map((option) => <option key={option.id} value={option.id}>{option.name}</option>)}
+          {equipment.map((option) => (
+            <option key={option.id} value={option.id}>{option.name}</option>
+          ))}
         </select>
       </label>
       <div className="mt-3 flex items-center justify-between gap-2">
-        <span className={`font-mono text-[10px] uppercase tracking-wider ${mission.body === 'Mars' ? 'text-[#ffb703]' : 'text-[#00f3ff]'}`}>
-          {mission.body}
-        </span>
-        <button type="button" onClick={() => onOpen(mission)} className="rounded border border-white/15 px-2 py-1 font-mono text-[9px] text-white/65 hover:border-[#00f3ff]/60 hover:text-white">
-          OPEN IN EXPLORER
-        </button>
+        <BodyTag body={mission.body} />
+        <Button variant="secondary" size="sm" onClick={() => onOpen(mission)}>
+          Open in Explorer
+          <ArrowUpRight size={13} aria-hidden="true" />
+        </Button>
       </div>
     </div>
   );
@@ -44,28 +46,70 @@ export default function MissionComparison({ open, onClose, onSelectMission }) {
   };
 
   return (
-    <div className="pointer-events-auto fixed inset-0 z-[60] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-      <section role="dialog" aria-modal="true" aria-label="Mission comparison" className="max-h-[90vh] w-[min(96vw,860px)] overflow-y-auto rounded-xl border border-white/15 bg-[#12141d] p-4 shadow-2xl sm:p-5">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.25em] text-[#00f3ff]"><ArrowLeftRight size={13} /> Mission comparison</p>
-            <p className="mt-1 text-xs text-white/45">Dataset records // differences highlighted</p>
-          </div>
-          <button type="button" onClick={onClose} aria-label="Close mission comparison" className="text-white/50 hover:text-white"><X size={18} /></button>
+    <div className="pointer-events-auto fixed inset-0 z-[60] flex items-center justify-center bg-space-black/80 p-4">
+      <section
+        role="dialog"
+        aria-modal="true"
+        aria-label="Mission comparison"
+        className="instrument-panel archive-scroll max-h-[90vh] w-[min(96vw,880px)] overflow-y-auto rounded-lg p-5 sm:p-6"
+      >
+        <PanelHeader
+          eyebrow="Comparative Analysis"
+          eyebrowClass="text-ice-accent"
+          title="Mission Comparison"
+          onClose={onClose}
+          closeLabel="Close mission comparison"
+        >
+          <p className="mt-1 text-xs text-ink-secondary">
+            Side-by-side archival records with differing fields highlighted.
+          </p>
+        </PanelHeader>
+
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          <MissionColumn
+            label="Mission one"
+            mission={left}
+            selectedId={leftId}
+            onChange={(event) => setLeftId(event.target.value)}
+            onOpen={openMission}
+          />
+          <MissionColumn
+            label="Mission two"
+            mission={right}
+            selectedId={rightId}
+            onChange={(event) => setRightId(event.target.value)}
+            onOpen={openMission}
+          />
         </div>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <MissionColumn label="Mission one" mission={left} selectedId={leftId} onChange={(event) => setLeftId(event.target.value)} onOpen={openMission} />
-          <MissionColumn label="Mission two" mission={right} selectedId={rightId} onChange={(event) => setRightId(event.target.value)} onOpen={openMission} />
-        </div>
-        <div className="mt-4 overflow-hidden rounded-lg border border-white/10">
-          <div className="grid grid-cols-[minmax(96px,0.7fr)_minmax(0,1fr)_minmax(0,1fr)] bg-white/[0.04] px-3 py-2 font-mono text-[9px] uppercase tracking-wider text-white/40">
-            <span>Field</span><span className="truncate">{left.name}</span><span className="truncate">{right.name}</span>
+
+        <div className="mt-5 overflow-hidden rounded-md border border-white/10">
+          <div className="grid grid-cols-[minmax(108px,0.75fr)_minmax(0,1fr)_minmax(0,1fr)] gap-3 bg-panel-recessed px-4 py-2.5 text-[11px] font-medium text-ink-muted">
+            <span>Parameter</span>
+            <span className="truncate text-ink-primary">{left.name}</span>
+            <span className="truncate text-ink-primary">{right.name}</span>
           </div>
           {rows.map((row) => (
-            <div key={row.key} className={`grid grid-cols-[minmax(96px,0.7fr)_minmax(0,1fr)_minmax(0,1fr)] gap-2 border-t border-white/10 px-3 py-2 text-xs ${row.differs ? 'bg-[#00f3ff]/[0.04]' : ''}`}>
-              <span className="font-mono text-[9px] uppercase text-white/45">{row.label}</span>
-              <span className="break-words text-white/80">{row.leftValue}</span>
-              <span className="break-words text-white/80">{row.rightValue}</span>
+            <div
+              key={row.key}
+              className={`grid grid-cols-[minmax(108px,0.75fr)_minmax(0,1fr)_minmax(0,1fr)] gap-3 border-t border-white/[0.08] px-4 py-3 text-xs ${
+                row.differs ? 'bg-ice-accent/[0.05]' : ''
+              }`}
+            >
+              <span className="flex items-start gap-2 text-ink-muted">
+                {row.differs && (
+                  <span
+                    aria-hidden="true"
+                    className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-ice-accent"
+                  />
+                )}
+                <span>{row.label}</span>
+              </span>
+              <span className="break-words leading-relaxed text-ink-primary tabular-data">
+                {row.leftValue}
+              </span>
+              <span className="break-words leading-relaxed text-ink-primary tabular-data">
+                {row.rightValue}
+              </span>
             </div>
           ))}
         </div>

@@ -20,10 +20,10 @@ export default function InspectorScene({
 }) {
   return (
     <>
-      <color attach="background" args={['#08090c']} />
+      <color attach="background" args={['#07080b']} />
       <ambientLight intensity={1.4} />
       <directionalLight position={[3, 4, 5]} intensity={3} />
-      <pointLight position={[-3, 1, 2]} intensity={2} color="#00f3ff" />
+      <pointLight position={[-3, 1, 2]} intensity={1.6} color="#8ccee0" />
       {hasHardwareModel(equipment.id) ? (
         <TextureFallbackBoundary
           key={equipment.id}

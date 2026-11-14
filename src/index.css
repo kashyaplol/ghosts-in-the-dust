@@ -3,9 +3,65 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --bg-void: #07080b;
+    --bg-instrument: #0d1015;
+    --bg-recessed: #13171f;
+    --bg-elevated: #191f2a;
+    --border-hairline: rgba(226, 232, 240, 0.11);
+    --border-strong: rgba(226, 232, 240, 0.22);
+    --text-primary: #f2efe9;
+    --text-secondary: #a6b0be;
+    --text-muted: #6e7887;
+    --accent-ice: #67c5d9;
+    --accent-mars: #c96a42;
+    --accent-lunar: #c8d0dc;
+    --accent-amber: #d49a45;
+    --accent-crimson: #d45b5b;
+  }
+
+  html,
   body {
-    background-color: #08090c;
-    color: #ffffff;
-    overflow-x: hidden;
+    background-color: var(--bg-void);
+    color: var(--text-primary);
+    font-family: 'Noto Sans', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
+  }
+}
+
+@layer utilities {
+  .instrument-panel {
+    background-color: rgba(13, 16, 21, 0.94);
+    border: 1px solid var(--border-hairline);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.62);
+  }
+
+  .instrument-surface {
+    background-color: var(--bg-recessed);
+    border: 1px solid var(--border-hairline);
+  }
+
+  .tabular-data {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .archive-scroll::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .archive-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .archive-scroll::-webkit-scrollbar-thumb {
+    background: rgba(166, 176, 190, 0.2);
+    border-radius: 3px;
+  }
+
+  .archive-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(166, 176, 190, 0.35);
   }
 }

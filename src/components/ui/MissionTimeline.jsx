@@ -1,6 +1,7 @@
-import { Clock3, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import equipment from '@/data/equipment.json';
+import { BodyTag, PanelHeader } from '@/components/ui/primitives';
+import { getBodyTheme } from '@/utils/missionTheme';
 import {
   filterTimelineMissions,
   getTimelineDate,
@@ -24,61 +25,102 @@ export default function MissionTimeline({
 
   return (
     <section
-      className="pointer-events-auto fixed left-6 top-28 z-[44] w-[min(92vw,680px)] rounded-xl border border-white/15 bg-[#12141d]/95 p-4 shadow-2xl backdrop-blur-md"
+      className="instrument-panel pointer-events-auto fixed left-4 top-28 z-[44] flex max-h-[calc(100vh-12rem)] w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-lg sm:left-6 lg:top-20 lg:max-h-[calc(100vh-7rem)] sm:w-[376px]"
       aria-label="Historical mission timeline"
     >
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.25em] text-[#00f3ff]">
-            <Clock3 size={13} /> Historical mission timeline
+      <div className="shrink-0 border-b border-white/10 px-5 pb-4 pt-5">
+        <PanelHeader
+          eyebrow="Landing Chronology"
+          eyebrowClass="text-ice-accent"
+          title="Mission Timeline"
+          onClose={onClose}
+          closeLabel="Close historical mission timeline"
+        >
+          <p className="mt-1 text-xs text-ink-secondary">
+            Ordered archive records from earliest to most recent deployment.
           </p>
-          <p className="mt-1 text-xs text-white/45">Landing chronology // dataset records</p>
+        </PanelHeader>
+
+        <div
+          className="mt-4 inline-flex items-center rounded-md border border-white/12 bg-panel-recessed p-0.5"
+          role="group"
+          aria-label="Timeline planet filter"
+        >
+          {filters.map((filter) => {
+            const active = body === filter;
+            return (
+              <button
+                key={filter}
+                type="button"
+                onClick={() => setBody(filter)}
+                aria-pressed={active}
+                className={`h-7 rounded-[4px] px-3 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ice-accent/75 ${
+                  active
+                    ? 'bg-panel-elevated text-ink-primary shadow-sm'
+                    : 'text-ink-secondary hover:text-ink-primary'
+                }`}
+              >
+                {filter}
+              </button>
+            );
+          })}
         </div>
-        <button type="button" onClick={onClose} aria-label="Close historical mission timeline" className="text-white/50 hover:text-white">
-          <X size={18} />
-        </button>
       </div>
-      <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Timeline planet filter">
-        {filters.map((filter) => (
-          <button
-            key={filter}
-            type="button"
-            onClick={() => setBody(filter)}
-            aria-pressed={body === filter}
-            className={`rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-wider transition ${body === filter ? 'border-[#00f3ff]/60 bg-[#00f3ff]/10 text-[#00f3ff]' : 'border-white/10 text-white/50 hover:border-white/30 hover:text-white'}`}
-          >
-            {filter}
-          </button>
-        ))}
-      </div>
-      <ol className="mt-4 grid max-h-[45vh] gap-2 overflow-y-auto pr-1 sm:grid-cols-2" aria-label="Missions in chronological order">
+
+      <ol
+        className="archive-scroll min-h-0 flex-1 overflow-y-auto px-5 py-4"
+        aria-label="Missions in chronological order"
+      >
         {missions.map((mission, index) => {
           const selected = mission.id === selectedEquipmentId;
-          const accent = mission.body === 'Mars' ? '#ffb703' : '#00f3ff';
+          const bodyTheme = getBodyTheme(mission.body);
+          const isLast = index === missions.length - 1;
           return (
-            <li key={mission.id}>
+            <li key={mission.id} className="relative flex gap-3.5">
+              <div className="flex flex-col items-center pt-1.5" aria-hidden="true">
+                <span
+                  className="h-2.5 w-2.5 shrink-0 rounded-full border-2 bg-panel-dark"
+                  style={{
+                    borderColor: selected ? '#67c5d9' : bodyTheme.accent,
+                    backgroundColor: selected ? '#67c5d9' : '#0d1015',
+                  }}
+                />
+                {!isLast && <span className="mt-1 w-px flex-1 bg-white/10" />}
+              </div>
+
               <button
                 type="button"
                 onClick={() => onSelectMission(mission)}
                 aria-current={selected ? 'true' : undefined}
-                className={`w-full rounded-lg border p-3 text-left transition ${selected ? 'bg-white/10' : 'border-white/10 hover:bg-white/5'}`}
-                style={{ borderColor: selected ? `${accent}88` : undefined }}
+                className={`mb-2.5 flex-1 rounded-md border px-3.5 py-2.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ice-accent/75 ${
+                  selected
+                    ? 'border-ice-accent/55 bg-ice-accent/10'
+                    : 'border-white/[0.08] bg-panel-recessed/50 hover:border-white/20 hover:bg-panel-elevated/70'
+                }`}
               >
-                <span className="flex items-start justify-between gap-3">
-                  <span>
-                    <span className="block font-mono text-[9px] uppercase tracking-wider" style={{ color: accent }}>
-                      {String(index + 1).padStart(2, '0')} // {mission.body}
-                    </span>
-                    <span className="mt-1 block text-sm text-white/90">{mission.name}</span>
+                <div className="flex items-center justify-between gap-2 text-[11px]">
+                  <span className="flex items-center gap-1.5 font-mono tabular-data text-ink-muted">
+                    <span>{String(index + 1).padStart(2, '0')}</span>
+                    <span aria-hidden="true">·</span>
+                    <BodyTag body={mission.body} className="text-[11px]" />
                   </span>
-                  <span className="shrink-0 font-mono text-[9px] text-white/45">{getTimelineDate(mission)}</span>
+                  <span className="font-mono tabular-data text-ink-muted">
+                    {getTimelineDate(mission)}
+                  </span>
+                </div>
+                <span className="mt-1 block text-sm font-medium text-ink-primary">
+                  {mission.name}
                 </span>
               </button>
             </li>
           );
         })}
+        {!missions.length && (
+          <p className="py-6 text-center text-xs text-ink-muted">
+            No missions recorded for this filter.
+          </p>
+        )}
       </ol>
-      {!missions.length && <p className="py-5 text-center font-mono text-xs text-white/45">NO MISSIONS RECORDED FOR THIS FILTER</p>}
     </section>
   );
 }

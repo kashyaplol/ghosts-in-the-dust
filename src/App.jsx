@@ -124,9 +124,12 @@ export default function App() {
           onOpenSearch={() => setSearchOpen(true)}
           onDismissSearch={closeSearch}
           onSelectMission={selectMission}
-          onStartGuidedExploration={() => setGuidedOpen(true)}
+          onStartGuidedExploration={() => setGuidedOpen((open) => !open)}
           onToggleTimeline={() => setTimelineOpen((open) => !open)}
-          onToggleComparison={() => setComparisonOpen(true)}
+          onToggleComparison={() => setComparisonOpen((open) => !open)}
+          guidedOpen={guidedOpen}
+          timelineOpen={timelineOpen}
+          comparisonOpen={comparisonOpen}
         />
       </div>
       <div className="pointer-events-none fixed inset-0 z-10 flex flex-col">
