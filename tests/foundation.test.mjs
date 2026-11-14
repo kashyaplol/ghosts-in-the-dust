@@ -173,3 +173,12 @@ test('exposes focused audio and loading fallback states', async () => {
   assert.match(loading, /role="status"/);
   assert.match(loading, /Loading stage/);
 });
+
+test('defines cinematic Moon and Mars loading copy without fake progress', async () => {
+  const source = await readSource(new URL('../src/components/ui/PlanetLoadingOverlay.jsx', import.meta.url), 'utf8');
+  assert.match(source, /INITIALIZING LUNAR SURFACE/);
+  assert.match(source, /INITIALIZING MARTIAN SURFACE/);
+  assert.match(source, /Awaiting texture decode and GPU upload/);
+  assert.doesNotMatch(source, /setInterval|setTimeout/);
+  assert.match(source, /status === ASSET_STATES\.FAILED/);
+});

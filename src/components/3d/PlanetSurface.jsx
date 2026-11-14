@@ -2,7 +2,7 @@ import { useTexture } from '@react-three/drei';
 import { useEffect } from 'react';
 import { getTexturePath } from '@/utils/texture';
 
-function TexturedSurface({ activeBody, previousBody, onLoaded }) {
+function TexturedSurface({ activeBody, previousBody, onLoaded, hideSurface }) {
   const paths = previousBody
     ? [getTexturePath(previousBody), getTexturePath(activeBody)]
     : [getTexturePath(activeBody)];
@@ -13,6 +13,7 @@ function TexturedSurface({ activeBody, previousBody, onLoaded }) {
     onLoaded?.();
   }, [activeBody, onLoaded]);
 
+  if (hideSurface) return null;
   return (
     <mesh>
       <sphereGeometry args={[2, 64, 64]} />
@@ -29,12 +30,13 @@ function TexturedSurface({ activeBody, previousBody, onLoaded }) {
   );
 }
 
-export default function PlanetSurface({ activeBody, previousBody, onLoaded }) {
+export default function PlanetSurface({ activeBody, previousBody, onLoaded, hideSurface }) {
   return (
     <TexturedSurface
       activeBody={activeBody}
       previousBody={previousBody}
       onLoaded={onLoaded}
+      hideSurface={hideSurface}
     />
   );
 }

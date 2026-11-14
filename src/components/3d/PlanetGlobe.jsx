@@ -22,6 +22,7 @@ export default function PlanetGlobe({
   selectedEquipmentId,
   onSelectEquipment,
   onTextureStatus,
+  textureStatus,
 }) {
   const missions = useMemo(() => (
     equipment
@@ -72,6 +73,7 @@ export default function PlanetGlobe({
           activeBody={activeBody}
           previousBody={previousBody}
           onLoaded={reportTextureLoaded}
+          hideSurface={textureStatus === 'loading'}
         />
       </TextureFallbackBoundary>
       {missions.map((mission) => (

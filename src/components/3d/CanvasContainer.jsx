@@ -10,15 +10,6 @@ import PlanetLighting from '@/components/3d/PlanetLighting';
 import CameraController from '@/components/3d/CameraController';
 import { latLongToVector3 } from '@/utils/coordinates';
 
-function LoadingGlobe() {
-  return (
-    <mesh>
-      <sphereGeometry args={[2, 24, 24]} />
-      <meshStandardMaterial color="#252936" roughness={0.9} />
-    </mesh>
-  );
-}
-
 export default function CanvasContainer({
   activeBody,
   selectedEquipmentId,
@@ -26,6 +17,7 @@ export default function CanvasContainer({
   onTextureStatus,
   cameraAction,
   onRendererReady,
+  textureStatus,
 }) {
   const controlsRef = useRef();
   const selected = equipment.find((item) => item.id === selectedEquipmentId);
@@ -46,12 +38,13 @@ export default function CanvasContainer({
       <color attach="background" args={['#08090c']} />
       <DeepSpaceBackground />
       <PlanetLighting />
-      <Suspense fallback={<LoadingGlobe />}>
+      <Suspense fallback={null}>
         <PlanetGlobe
           activeBody={activeBody}
           selectedEquipmentId={selectedEquipmentId}
           onSelectEquipment={onSelectEquipment}
           onTextureStatus={onTextureStatus}
+          textureStatus={textureStatus}
         />
         <PlanetAtmosphere body={activeBody} />
       </Suspense>

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useLayoutEffect, useState } from 'react';
 import CanvasContainer from '@/components/3d/CanvasContainer';
 import AudioPlayer from '@/components/ui/AudioPlayer';
 import Header from '@/components/ui/Header';
@@ -9,6 +9,7 @@ import CameraActions from '@/components/ui/CameraActions';
 import ShortcutGuide from '@/components/ui/ShortcutGuide';
 import LoadingScreen from '@/components/ui/LoadingScreen';
 import AssetStatus from '@/components/ui/AssetStatus';
+import PlanetLoadingOverlay from '@/components/ui/PlanetLoadingOverlay';
 import useOnboarding from '@/hooks/useOnboarding';
 import useMissionSearch from '@/hooks/useMissionSearch';
 import useKeyboardShortcuts from '@/hooks/useKeyboardShortcuts';
@@ -76,14 +77,14 @@ export default function App() {
     onCloseSelection: clearSelection,
   });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setTextureStatuses((current) => ({ ...current, [activeBody]: ASSET_STATES.LOADING }));
   }, [activeBody]);
   const handleTextureStatus = useCallback((body, status) => {
     setTextureStatuses((current) => ({ ...current, [body]: status }));
   }, []);
   const currentTextureStatus = textureStatuses[activeBody];
-  const loadingVisible = !rendererReady || currentTextureStatus === ASSET_STATES.LOADING;
+  const loadingVisible = !rendererReady;
 
   return (
     <main className="relative h-screen w-screen overflow-hidden bg-space-black">
@@ -94,6 +95,7 @@ export default function App() {
         cameraAction={cameraAction}
         onTextureStatus={handleTextureStatus}
         onRendererReady={() => setRendererReady(true)}
+        textureStatus={currentTextureStatus}
       />
       <CameraActions
         hasSelection={Boolean(selectedEquipmentId)}
@@ -105,6 +107,9 @@ export default function App() {
         ready={rendererReady}
         stage={!rendererReady ? 'Initializing planetary renderer' : 'Loading planetary surface assets'}
       />
+      {rendererReady && (
+        <PlanetLoadingOverlay body={activeBody} status={currentTextureStatus} />
+      )}
       <div className="pointer-events-none fixed inset-0 z-10 flex flex-col">
         <Header
           onReplayTutorial={replay}
