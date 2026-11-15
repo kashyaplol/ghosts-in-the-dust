@@ -1,46 +1,43 @@
-<div align="center">
-  <img width="2172" height="724" alt="readme-banner" src="https://github.com/user-attachments/assets/06bb0f9c-af3f-45bb-8b6d-07a452f325be" />
+# Ghosts in the Dust
 
-  <h1>Ghosts in the Dust</h1>
-  <p><strong>A planetary archaeology archive of humanity's missions on the Moon and Mars.</strong></p>
-  <p>
-    <a href="https://ghosts-in-the-dust.vercel.app/">Live Demo</a>
-    · Explore historic missions, landing sites, hardware, and the stories left behind.
-  </p>
-</div>
+An interactive Three.js archive of historic NASA missions on the Moon and Mars.
 
-## Overview
-
-Ghosts in the Dust is an interactive 3D archive for exploring historic lunar and Martian missions. Navigate the Moon and Mars, locate missions on their surfaces, inspect available hardware models, and explore mission records through a shared interface.
-
-## Features
-
-- **3D planetary explorer** — textured Moon and Mars with interactive camera controls.
-- **Mission archive** — explore six curated mission records across both planetary bodies.
-- **Telemetry dossiers** — view archival mission status, dates, coordinates, and specifications.
-- **Timeline & comparison** — explore missions chronologically and compare records.
-- **Hardware inspector** — inspect available GLB/GLTF models, with configured fallbacks.
-- **Guided exploration** — follow a chronological journey through the missions.
-- **Final Hours** — read mission-ending narratives and optionally use browser speech synthesis.
-
-## Tech stack
-
-React · Vite · Three.js · React Three Fiber · Drei · Tailwind CSS · Framer Motion
-
-## Run locally
+## Development
 
 ```bash
-git clone <repository-url>
-cd ghosts-in-the-dust
-npm install
+npm ci
 npm run dev
 ```
 
-## Validation
+Run the deterministic checks and production build with:
 
 ```bash
 npm test
 npm run build
 ```
 
-> **Note:** Mission dossiers are based on the project's curated archival dataset; they are not live spacecraft telemetry. Final Hours narration uses browser speech synthesis where supported.
+## Planet textures
+
+The local surface maps are loaded from:
+
+- `public/textures/moon_surface.jpg`
+- `public/textures/mars_surface.jpg`
+
+The Moon and Mars surface imagery is attributed to NASA/JPL-Caltech. The
+application uses these local files only; it does not download textures at
+runtime. If a local texture is unavailable, the corresponding procedural
+fallback remains available.
+
+## Hardware imagery
+
+The inspector uses local GLB models first. Apollo 15 and Curiosity use verified
+NASA archival photographs when a mission-specific GLB is unavailable:
+
+- `public/images/probes/apollo-15-lrv.webp` — NASA Apollo 15 mission imagery,
+  sourced through Wikimedia Commons.
+- `public/images/probes/curiosity-rover.webp` — NASA/JPL-Caltech Curiosity MSL
+  imagery, sourced through Wikimedia Commons.
+
+These are labelled **NASA ARCHIVAL IMAGE** in the inspector. They are not
+AI-generated illustrations. Missing or unreadable image assets produce an
+explicit fallback instead of a blank inspector.

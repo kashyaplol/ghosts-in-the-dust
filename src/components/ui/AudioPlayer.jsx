@@ -122,7 +122,7 @@ export default function AudioPlayer({ equipment, isPlaying, onPlay, onStop, onCl
       aria-label={`${equipment.name} Final Hours transmission`}
     >
       <PanelHeader
-        eyebrow="Final Hours · Archive Transcript"
+        eyebrow="Final Hours · Mission Narrative"
         eyebrowClass="text-solar-amber"
         title={equipment.name}
         onClose={onClose}
@@ -164,6 +164,9 @@ export default function AudioPlayer({ equipment, isPlaying, onPlay, onStop, onCl
           <div className="mt-3 h-1 overflow-hidden rounded-sm bg-white/10" aria-label={`Transmission progress ${Math.round(progress * 100)} percent`}>
             <div className="h-full bg-ice-accent transition-[width] duration-200" style={{ width: `${progress * 100}%` }} />
           </div>
+          <p className="mt-2.5 text-[11px] leading-snug text-ink-muted">
+            Browser-generated narration. Not original mission audio.
+          </p>
         </div>
       )}
     </section>
