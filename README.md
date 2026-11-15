@@ -46,4 +46,8 @@ explicit fallback instead of a blank inspector.
 
 - [Coordinate Conventions & Planetary Datums](docs/coordinate-conventions.md)
 - [Mission Date Semantics & Archival Notes](docs/mission-data-notes.md)
+- [AI Use & Acknowledgements](docs/AI-USE-AND-ACKNOWLEDGEMENTS.md)
+- [Third-Party Assets & Licensing Credits](docs/ASSET-CREDITS.md)
+- [NASA Space Apps 2026 Submission Responses](docs/SPACE-APPS-SUBMISSION.md)
+- [7-Slide Project Demo Guide](docs/SPACE-APPS-DEMO-SLIDES.md) & [PDF Deck](docs/Ghosts-in-the-Dust-Demo-Slides.pdf)
 
