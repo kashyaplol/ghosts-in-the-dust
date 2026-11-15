@@ -9,7 +9,7 @@ Explore where we landed, inspect the hardware we left behind, and read the stori
 ![Three.js](https://img.shields.io/badge/Three.js-R3F-000000?logo=threedotjs&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-06B6D4?logo=tailwindcss&logoColor=white)
 
-[**Live app**](https://ghosts-in-the-dust.vercel.app/) · [**Demo video**]((https://drive.google.com/file/d/1E60RxOVrNMyd-kCyZ53iEvmTip6_mqsm/view?usp=drive_link))
+[**Live app**](https://ghosts-in-the-dust.vercel.app/) · [**Demo video**](https://drive.google.com/file/d/1E60RxOVrNMyd-kCyZ53iEvmTip6_mqsm/view?usp=drive_link)
 
 ---
 
@@ -51,9 +51,9 @@ React 18, Vite, Three.js, React Three Fiber, Drei, Tailwind CSS, Framer Motion, 
 
 The app is entirely client-side. There is no backend or database.
 
-<!-- After adding the watermarked image as docs/architecture.png, uncomment:
-![Architecture diagram (AI-generated, watermarked)](docs/architecture.png)
--->
+![Ghosts in the Dust architecture diagram](docs/architecture.png)
+
+*Architecture diagram, AI-generated with Gemini.*
 
 1. **Data:** `src/data/equipment.json` holds the curated mission records, sources and narratives.
 2. **Logic:** pure utilities for coordinates, search and filtering, timeline, comparison and zoom, covered by tests.
