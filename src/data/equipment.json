@@ -15,7 +15,14 @@
       "powerSource": "Silver-zinc batteries",
       "totalDistance": "1.25 km on the lunar surface"
     },
-    "narrativeTranscript": "Tranquility Base here. The surface work is complete, and my crew is climbing toward orbit. I will remain beneath the lunar dust, holding the first footprints in place."
+    "narrativeTranscript": "Tranquility Base here. The surface work is complete, and my crew is climbing toward orbit. I will remain beneath the lunar dust, holding the first footprints in place.",
+    "sources": [
+      {
+        "title": "NASA NSSDCA — Apollo 11",
+        "publisher": "NASA NSSDCA",
+        "url": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo11info.html"
+      }
+    ]
   },
   {
     "id": "apollo-15-lrv",
@@ -33,7 +40,14 @@
       "powerSource": "Two 36-volt silver-zinc batteries",
       "totalDistance": "27.76 km"
     },
-    "narrativeTranscript": "My wheels have carried the crew beyond the lander and back through the dust. The batteries are quiet now. I am parked beneath the mountains, facing the trail we made together."
+    "narrativeTranscript": "My wheels have carried the crew beyond the lander and back through the dust. The batteries are quiet now. I am parked beneath the mountains, facing the trail we made together.",
+    "sources": [
+      {
+        "title": "NASA — Apollo Missions",
+        "publisher": "NASA",
+        "url": "https://www.nasa.gov/specials/apollo50th/missions.html"
+      }
+    ]
   },
   {
     "id": "opportunity-mer-b",
@@ -51,7 +65,14 @@
       "powerSource": "Solar array and lithium-ion batteries",
       "totalDistance": "45.16 km"
     },
-    "narrativeTranscript": "My battery is low and it is getting dark. Dust has covered the solar panels. I am entering a final sleep cycle at Endeavour Crater, carrying the memory of ancient water with me."
+    "narrativeTranscript": "My battery is low and it is getting dark. Dust has covered the solar panels. I am entering a final sleep cycle at Endeavour Crater, carrying the memory of ancient water with me.",
+    "sources": [
+      {
+        "title": "NASA Science — Opportunity",
+        "publisher": "NASA Science",
+        "url": "https://science.nasa.gov/mission/mer-opportunity/"
+      }
+    ]
   },
   {
     "id": "curiosity-msl",
@@ -69,7 +90,14 @@
       "powerSource": "Multi-Mission Radioisotope Thermoelectric Generator",
       "totalDistance": "35.78 km"
     },
-    "narrativeTranscript": "The wind moves across Mount Sharp, and my instruments are still listening. Each drilled sample adds another page to the story of a world that once held water."
+    "narrativeTranscript": "The wind moves across Mount Sharp, and my instruments are still listening. Each drilled sample adds another page to the story of a world that once held water.",
+    "sources": [
+      {
+        "title": "NASA JPL — Mars Science Laboratory: Curiosity Rover",
+        "publisher": "NASA JPL",
+        "url": "https://www.jpl.nasa.gov/missions/mars-science-laboratory-curiosity-rover-msl/"
+      }
+    ]
   },
   {
     "id": "viking-1-lander",
@@ -87,7 +115,14 @@
       "powerSource": "Radioisotope Thermoelectric Generators",
       "totalDistance": "0 km"
     },
-    "narrativeTranscript": "I have watched two Martian seasons pass from my still position on Chryse Planitia. My antenna has turned away from Earth, but the soil readings and weather records remain in the archive."
+    "narrativeTranscript": "I have watched two Martian seasons pass from my still position on Chryse Planitia. My antenna has turned away from Earth, but the soil readings and weather records remain in the archive.",
+    "sources": [
+      {
+        "title": "NASA Science — Viking 1",
+        "publisher": "NASA Science",
+        "url": "https://science.nasa.gov/mission/viking-1/"
+      }
+    ]
   },
   {
     "id": "ingenuity-helicopter",
@@ -105,6 +140,13 @@
       "powerSource": "Solar panel and rechargeable lithium-ion batteries",
       "totalDistance": "17.23 km"
     },
-    "narrativeTranscript": "Flight seventy-two is complete. I rose above the Jezero floor more times than anyone expected, drawing a path through the thin air. My blades are still, but the sky is no longer untested."
+    "narrativeTranscript": "Flight seventy-two is complete. I rose above the Jezero floor more times than anyone expected, drawing a path through the thin air. My blades are still, but the sky is no longer untested.",
+    "sources": [
+      {
+        "title": "NASA Science — Ingenuity Mars Helicopter",
+        "publisher": "NASA Science",
+        "url": "https://science.nasa.gov/mission/mars-2020-perseverance/ingenuity-mars-helicopter/"
+      }
+    ]
   }
 ]

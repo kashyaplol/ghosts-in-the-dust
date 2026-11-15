@@ -1,11 +1,54 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { Box, Radio } from 'lucide-react';
+import { Box, ChevronDown, ExternalLink, Radio } from 'lucide-react';
+import { useState } from 'react';
 import { BodyTag, Button, PanelHeader, StatusIndicator } from '@/components/ui/primitives';
 import {
   formatCoordinates,
   getOperationalLifespan,
   getStatusMeta,
 } from '@/utils/missionTheme';
+
+function MissionSources({ sources }) {
+  const [expanded, setExpanded] = useState(false);
+  if (!sources?.length) return null;
+
+  return (
+    <div className="border-t border-white/[0.07] pt-3">
+      <button
+        type="button"
+        onClick={() => setExpanded((open) => !open)}
+        aria-expanded={expanded}
+        aria-controls="mission-sources-list"
+        className="flex w-full items-center justify-between gap-2 rounded py-0.5 text-left text-[11px] font-medium uppercase tracking-[0.12em] text-ink-muted transition-colors hover:text-ink-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ice-accent/75"
+      >
+        <span>Mission Sources</span>
+        <ChevronDown
+          size={13}
+          aria-hidden="true"
+          className={`transition-transform duration-150 ${expanded ? 'rotate-180' : ''}`}
+        />
+      </button>
+      {expanded && (
+        <ul id="mission-sources-list" className="mt-2 space-y-2">
+          {sources.map((source) => (
+            <li key={source.url}>
+              <a
+                href={source.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-start gap-1.5 rounded text-xs leading-snug text-ink-secondary underline decoration-white/15 underline-offset-4 transition-colors hover:text-ice-accent hover:decoration-ice-accent/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ice-accent/75"
+              >
+                <span>{source.title}</span>
+                <ExternalLink size={11} aria-hidden="true" className="mt-0.5 shrink-0 text-ink-muted group-hover:text-ice-accent" />
+              </a>
+              <p className="mt-0.5 text-[11px] text-ink-muted">{source.publisher} · General mission reference</p>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
 
 export default function TelemetryHUD({
   selectedEquipment,
@@ -109,6 +152,8 @@ export default function TelemetryHUD({
                 {selectedEquipment.primaryMission}
               </p>
             </div>
+
+            <MissionSources sources={selectedEquipment.sources} />
           </div>
 
           <div className="grid shrink-0 grid-cols-2 gap-2 border-t border-white/10 bg-panel-recessed/70 px-4 py-3">
