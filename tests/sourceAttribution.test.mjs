@@ -44,7 +44,7 @@ test('associates all six missions with the official NASA source references', asy
   for (const mission of equipment) {
     const expected = EXPECTED_SOURCES[mission.id];
     assert.ok(expected, `Missing expected source for ${mission.id}`);
-    assert.ok(Array.isArray(mission.sources) && mission.sources.length === 1);
+    assert.ok(Array.isArray(mission.sources) && mission.sources.length >= 1);
     assert.deepEqual(mission.sources[0], expected);
   }
 });

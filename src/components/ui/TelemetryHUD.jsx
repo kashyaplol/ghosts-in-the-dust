@@ -21,7 +21,7 @@ function MissionSources({ sources }) {
         aria-controls="mission-sources-list"
         className="flex w-full items-center justify-between gap-2 rounded py-0.5 text-left text-[11px] font-medium uppercase tracking-[0.12em] text-ink-muted transition-colors hover:text-ink-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ice-accent/75"
       >
-        <span>Mission Sources</span>
+        <span>Source References</span>
         <ChevronDown
           size={13}
           aria-hidden="true"
