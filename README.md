@@ -51,7 +51,8 @@ React 18, Vite, Three.js, React Three Fiber, Drei, Tailwind CSS, Framer Motion, 
 
 The app is entirely client-side. There is no backend or database.
 
-![Ghosts in the Dust architecture diagram](docs/architecture.png)
+<img width="1024" height="572" alt="image" src="https://github.com/user-attachments/assets/74dfb411-b9c1-49a7-a5d1-87dcb717a0d3" />
+
 
 *Architecture diagram, AI-generated with Gemini.*
 
