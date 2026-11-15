@@ -52,7 +52,11 @@ test('loads six unique complete equipment records', async () => {
     assert.ok(item.name);
     assert.ok(['Moon', 'Mars'].includes(item.body));
     assert.ok(item.landedDate);
-    assert.ok(item.lastSignalDate);
+    if (item.status === 'Operational') {
+      assert.equal(item.lastSignalDate, null);
+    } else {
+      assert.ok(item.lastSignalDate);
+    }
     assert.ok(item.status);
     assert.ok(item.causeOfDeath);
     assert.ok(item.primaryMission);

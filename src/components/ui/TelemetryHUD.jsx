@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { BodyTag, Button, PanelHeader, StatusIndicator } from '@/components/ui/primitives';
 import {
   formatCoordinates,
+  getLastSignalDisplay,
   getOperationalLifespan,
   getStatusMeta,
 } from '@/utils/missionTheme';
@@ -105,7 +106,7 @@ export default function TelemetryHUD({
               <div>
                 <dt className="text-[11px] text-ink-muted">Last signal</dt>
                 <dd className="mt-1 font-mono text-xs tabular-data text-ink-primary">
-                  {selectedEquipment.lastSignalDate}
+                  {getLastSignalDisplay(selectedEquipment)}
                 </dd>
               </div>
               <div>
@@ -114,6 +115,7 @@ export default function TelemetryHUD({
                   {getOperationalLifespan(
                     selectedEquipment.landedDate,
                     selectedEquipment.lastSignalDate,
+                    selectedEquipment.status,
                   )}
                 </dd>
               </div>

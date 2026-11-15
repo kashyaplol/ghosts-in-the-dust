@@ -62,9 +62,27 @@ export function formatCoordinates(latitude, longitude) {
   return `${Math.abs(latitude).toFixed(2)}°${latDir}, ${Math.abs(longitude).toFixed(2)}°${lonDir}`;
 }
 
-export function getOperationalLifespan(landedDate, lastSignalDate) {
+export function isOperationalMission(mission) {
+  return mission?.status === 'Operational';
+}
+
+export function getLastSignalDisplay(mission) {
+  if (!mission) return 'UNAVAILABLE';
+  if (isOperationalMission(mission) || !mission.lastSignalDate) {
+    return isOperationalMission(mission) ? 'ACTIVE / OPERATIONAL' : 'UNAVAILABLE';
+  }
+  return mission.lastSignalDate;
+}
+
+export function getOperationalLifespan(landedDate, lastSignalDate, status) {
+  if (status === 'Operational' || !landedDate || !lastSignalDate) {
+    return status === 'Operational' ? 'Ongoing' : 'Unavailable';
+  }
   const start = new Date(`${landedDate}T00:00:00Z`);
   const end = new Date(`${lastSignalDate}T00:00:00Z`);
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
+    return 'Unavailable';
+  }
   const elapsedDays = Math.max(0, Math.round((end - start) / 86400000));
   const years = Math.floor(elapsedDays / 365.25);
   const days = Math.round(elapsedDays - years * 365.25);
