@@ -9,7 +9,7 @@ Explore where we landed, inspect the hardware we left behind, and read the stori
 ![Three.js](https://img.shields.io/badge/Three.js-R3F-000000?logo=threedotjs&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-06B6D4?logo=tailwindcss&logoColor=white)
 
-[**Live app**](https://ghosts-in-the-dust.vercel.app/) · [**Demo video**](https://drive.google.com/drive/folders/1CvBuKm4g5HcD68neA_6OfyBitVP9djpj?usp=drive_link)
+[**Live app**](https://ghosts-in-the-dust.vercel.app/) · [**Demo video**]((https://drive.google.com/file/d/1E60RxOVrNMyd-kCyZ53iEvmTip6_mqsm/view?usp=drive_link))
 
 ---
 
