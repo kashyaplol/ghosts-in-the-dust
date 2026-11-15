@@ -41,3 +41,9 @@ NASA archival photographs when a mission-specific GLB is unavailable:
 These are labelled **NASA ARCHIVAL IMAGE** in the inspector. They are not
 AI-generated illustrations. Missing or unreadable image assets produce an
 explicit fallback instead of a blank inspector.
+
+## Documentation
+
+- [Coordinate Conventions & Planetary Datums](docs/coordinate-conventions.md)
+- [Mission Date Semantics & Archival Notes](docs/mission-data-notes.md)
+

@@ -64,13 +64,13 @@
     "lastSignalDate": "2018-06-10",
     "status": "Lost Contact",
     "causeOfDeath": "A planet-wide Martian dust storm blocked sunlight from reaching the solar arrays, causing critical battery depletion and ending communications.",
-    "primaryMission": "Search for and characterize rocks and soils that preserve evidence of past water activity on Mars.",
+    "primaryMission": "Land at Eagle Crater in Meridiani Planum to search for rocks and soils preserving evidence of past water activity, later roving across the plains to Endeavour Crater.",
     "technicalSpecs": {
       "mass": "185 kg",
       "powerSource": "Solar array and lithium-ion batteries",
       "totalDistance": "45.16 km"
     },
-    "narrativeTranscript": "My battery is low and it is getting dark. Dust has covered the solar panels. I am entering a final sleep cycle at Endeavour Crater, carrying the memory of ancient water with me.",
+    "narrativeTranscript": "My battery is low and it is getting dark. Dust has covered the solar panels. Far from where I landed at Eagle Crater in Meridiani Planum, I am entering a final sleep cycle at Endeavour Crater, carrying the memory of ancient water with me.",
     "sources": [
       {
         "title": "Opportunity",
@@ -121,7 +121,7 @@
       "powerSource": "Radioisotope Thermoelectric Generators",
       "totalDistance": "0 km"
     },
-    "narrativeTranscript": "I have watched two Martian seasons pass from my still position on Chryse Planitia. My antenna has turned away from Earth, but the soil readings and weather records remain in the archive.",
+    "narrativeTranscript": "I have kept watch over Chryse Planitia for more than six Earth years, longer than anyone expected. My antenna has turned away from Earth, but the soil readings and weather records remain in the archive.",
     "sources": [
       {
         "title": "Viking 1",
